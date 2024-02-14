@@ -1,0 +1,126 @@
+version: v1.0
+
+name: Test
+
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+
+  - name: "Test on Ubuntu 18.04 LTS"
+    dependencies: []
+    task:
+      prologue:
+        commands:
+          - checkout
+      jobs:
+        - name: test
+          matrix:
+            - env_var: GCC_VERSION
+              values: [ "6", "7", "8" ]
+            - env_var: CONFIG
+              values: [ "debug", "release", "memorycheck" ]
+            - env_var: PLATFORM
+              values: [ "portable", "x64", "avx", "avx2" ]
+          commands:
+            - curl -L https://github.com/premake/premake-core/releases/download/v5.0.0-alpha14/premake-5.0.0-alpha14-linux.tar.gz | tar -xvz
+            - chmod +x premake5
+            - ./premake5 gmake
+            - sem-version c $GCC_VERSION
+            - gcc --version
+            - make -j32 config=${CONFIG}_${PLATFORM}
+            - ./bin/test
+
+  - name: "Test on Ubuntu 20.04 LTS"
+    dependencies: []
+    task:
+      prologue:
+        commands:
+          - checkout
+      agent:
+        machine:
+          type: e1-standard-8
+          os_image: ubuntu2004
+      jobs:
+        - name: test
+          matrix:
+            - env_var: CONFIG
+              values: [ "debug", "release", "memorycheck" ]
+            - env_var: PLATFORM
+              values: [ "portable", "x64", "avx", "avx2" ]
+          commands:
+            - curl -L https://github.com/premake/premake-core/releases/download/v5.0.0-alpha14/premake-5.0.0-alpha14-linux.tar.gz | tar -xvz
+            - chmod +x premake5
+            - ./premake5 gmake
+            - gcc --version
+            - make -j32 config=${CONFIG}_${PLATFORM}
+            - ./bin/test
+
+  - name: "Test on MacOS"
+    dependencies: []
+    task:
+      prologue:
+        commands:
+          - checkout
+      agent:
+        machine:
+          type: a1-standard-4
+          os_image: macos-xcode13
+      jobs:
+        - name: test
+          matrix:
+            - env_var: CONFIG
+              values: [ "debug_portable", "release_portable" ]
+          commands:
+            - brew install premake
+            - premake5 gmake
+            - make -j32 config=$CONFIG
+            - ./bin/test
+
+  - name: "Soak Test"
+    dependencies: []
+    task:
+      prologue:
+        commands:
+          - checkout
+      agent:
+        machine:
+          type: e1-standard-8
+          os_image: ubuntu2004
+      jobs:
+        - name: test
+          matrix:
+            - env_var: CONFIG
+              values: [ "memorycheck_portable" ]
+          commands:
+            - curl -L https://github.com/premake/premake-core/releases/download/v5.0.0-alpha14/premake-5.0.0-alpha14-linux.tar.gz | tar -xvz
+            - chmod +x premake5
+            - ./premake5 gmake
+            - gcc --version
+            - make -j32 config=$CONFIG soak
+            - ./bin/soak 60
+
+  - name: "Fuzz Test"
+    dependencies: []
+    task:
+      prologue:
+        commands:
+          - checkout
+      agent:
+        machine:
+          type: e1-standard-8
+          os_image: ubuntu2004
+      jobs:
+        - name: test
+          matrix:
+            - env_var: CONFIG
+              values: [ "memorycheck_portable" ]
+          commands:
+            - curl -L https://github.com/premake/premake-core/releases/download/v5.0.0-alpha14/premake-5.0.0-alpha14-linux.tar.gz | tar -xvz
+            - chmod +x premake5
+            - ./premake5 gmake
+            - gcc --version
+            - make -j32 config=$CONFIG fuzz
+            - ./bin/fuzz 60
