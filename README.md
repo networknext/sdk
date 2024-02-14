@@ -4,7 +4,7 @@
 
 [![Documentation Status](https://readthedocs.com/projects/network-next-sdk/badge/?version=latest)](https://network-next-sdk.readthedocs-hosted.com/en/latest/?badge=latest)
 
-## Network Next SDK v5
+## Network Next SDK
 
 Documentation:
 
@@ -13,10 +13,10 @@ Documentation:
 Supported platforms:
 
 * Windows
-* XBox One
-* XBox Series X
-* PS4
-* PS5
-* Switch
 * Linux
 * MacOS
+* PS4
+* PS5
+* XBox One
+* XBox Series X
+* Nintendo Switch
