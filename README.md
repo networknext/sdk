@@ -15,7 +15,7 @@ Supported platforms:
 
 * Windows
 * Linux
-* MacOS
+* Mac
 * PS4
 * PS5
 * XBox One
