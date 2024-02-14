@@ -2,7 +2,7 @@
 
 <br>
 
-[![Build Status](https://networknext.semaphoreci.com/badges/sdk/branches/master.svg?style=shields&key=d4176cdc-3556-4890-b988-95ee6d019b76)](https://networknext.semaphoreci.com/projects/sdk)
+[![Build Status](https://networknext.semaphoreci.com/badges/sdk/branches/main.svg?style=shields&key=d4176cdc-3556-4890-b988-95ee6d019b76)](https://networknext.semaphoreci.com/projects/sdk)
 [![Documentation Status](https://readthedocs.com/projects/network-next-sdk/badge/?version=latest)](https://network-next-sdk.readthedocs-hosted.com/en/latest/?badge=latest)
 
 ## Network Next SDK
