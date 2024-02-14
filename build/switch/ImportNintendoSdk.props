@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C)Nintendo. All rights reserved.
+ 
+These coded instructions, statements, and computer programs contain proprietary
+information of Nintendo and/or its licensed developers and are protected by
+national and international copyright laws. They may not be disclosed to third
+parties or copied or duplicated in any form, in whole or in part, without the
+prior written consent of Nintendo.
+ 
+The content herein is highly confidential and should be handled accordingly.
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import
+    Project="$(NintendoSdkRoot)\Build\Vc\NintendoSdkVcProjectSettings.props"
+    Condition="('$(NintendoSdkRoot)' != '') and Exists('$(NintendoSdkRoot)\Build\Vc\NintendoSdkVcProjectSettings.props')" />
+  <Target Name="NintendoSdkFailIfNintendoSdkIsMissing" BeforeTargets="PrepareForBuild">
+    <Error
+        Text="The required property 'NintendoSdkRoot' is not set"
+        Condition="'$(NintendoSdkRoot)' == ''" />
+    <Error
+        Text="NintendoSDK cannot be found at '$(NintendoSdkRoot)'"
+        Condition="!Exists('$(NintendoSdkRoot)\Build\Vc\NintendoSdkVcProjectSettings.props')" />
+  </Target>
+</Project>

@@ -1,0 +1,450 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Gaming.Xbox.Scarlett.x64">
+      <Configuration>Debug</Configuration>
+      <Platform>Gaming.Xbox.Scarlett.x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Gaming.Xbox.XboxOne.x64">
+      <Configuration>Debug</Configuration>
+      <Platform>Gaming.Xbox.XboxOne.x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Gaming.Xbox.Scarlett.x64">
+      <Configuration>Release</Configuration>
+      <Platform>Gaming.Xbox.Scarlett.x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Gaming.Xbox.XboxOne.x64">
+      <Configuration>Release</Configuration>
+      <Platform>Gaming.Xbox.XboxOne.x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\next.h" />
+    <ClInclude Include="..\..\include\next_address.h" />
+    <ClInclude Include="..\..\include\next_autodetect.h" />
+    <ClInclude Include="..\..\include\next_bandwidth_limiter.h" />
+    <ClInclude Include="..\..\include\next_base64.h" />
+    <ClInclude Include="..\..\include\next_bitpacker.h" />
+    <ClInclude Include="..\..\include\next_client.h" />
+    <ClInclude Include="..\..\include\next_config.h" />
+    <ClInclude Include="..\..\include\next_continue_token.h" />
+    <ClInclude Include="..\..\include\next_crypto.h" />
+    <ClInclude Include="..\..\include\next_hash.h" />
+    <ClInclude Include="..\..\include\next_header.h" />
+    <ClInclude Include="..\..\include\next_internal_config.h" />
+    <ClInclude Include="..\..\include\next_jitter_tracker.h" />
+    <ClInclude Include="..\..\include\next_memory_checks.h" />
+    <ClInclude Include="..\..\include\next_out_of_order_tracker.h" />
+    <ClInclude Include="..\..\include\next_packets.h" />
+    <ClInclude Include="..\..\include\next_packet_filter.h" />
+    <ClInclude Include="..\..\include\next_packet_loss_tracker.h" />
+    <ClInclude Include="..\..\include\next_pending_session_manager.h" />
+    <ClInclude Include="..\..\include\next_ping_history.h" />
+    <ClInclude Include="..\..\include\next_platform.h" />
+    <ClInclude Include="..\..\include\next_platform_gdk.h" />
+    <ClInclude Include="..\..\include\next_platform_linux.h" />
+    <ClInclude Include="..\..\include\next_platform_mac.h" />
+    <ClInclude Include="..\..\include\next_platform_ps4.h" />
+    <ClInclude Include="..\..\include\next_platform_ps5.h" />
+    <ClInclude Include="..\..\include\next_platform_switch.h" />
+    <ClInclude Include="..\..\include\next_platform_windows.h" />
+    <ClInclude Include="..\..\include\next_proxy_session_manager.h" />
+    <ClInclude Include="..\..\include\next_queue.h" />
+    <ClInclude Include="..\..\include\next_read_write.h" />
+    <ClInclude Include="..\..\include\next_relay_manager.h" />
+    <ClInclude Include="..\..\include\next_replay_protection.h" />
+    <ClInclude Include="..\..\include\next_route_manager.h" />
+    <ClInclude Include="..\..\include\next_route_token.h" />
+    <ClInclude Include="..\..\include\next_serialize.h" />
+    <ClInclude Include="..\..\include\next_server.h" />
+    <ClInclude Include="..\..\include\next_session_manager.h" />
+    <ClInclude Include="..\..\include\next_stream.h" />
+    <ClInclude Include="..\..\include\next_tests.h" />
+    <ClInclude Include="..\..\include\next_upgrade_token.h" />
+    <ClInclude Include="..\..\sodium\sodium.h" />
+    <ClInclude Include="..\..\sodium\sodium_blake2.h" />
+    <ClInclude Include="..\..\sodium\sodium_blake2b-compress-avx2.h" />
+    <ClInclude Include="..\..\sodium\sodium_blake2b-compress-sse41.h" />
+    <ClInclude Include="..\..\sodium\sodium_blake2b-compress-ssse3.h" />
+    <ClInclude Include="..\..\sodium\sodium_blake2b-load-avx2.h" />
+    <ClInclude Include="..\..\sodium\sodium_blake2b-load-sse2.h" />
+    <ClInclude Include="..\..\sodium\sodium_blake2b-load-sse41.h" />
+    <ClInclude Include="..\..\sodium\sodium_chacha20-ref.h" />
+    <ClInclude Include="..\..\sodium\sodium_core.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_aead_chacha20poly1305.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_aead_xchacha20poly1305.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_auth.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_auth_hmacsha512.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_auth_hmacsha512256.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_box.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_box_curve25519xchacha20poly1305.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_box_curve25519xsalsa20poly1305.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_core_ed25519.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_core_hchacha20.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_core_hsalsa20.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_core_salsa20.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_core_salsa2012.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_core_salsa208.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_generichash.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_generichash_blake2b.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_hash.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_hash_sha512.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_kx.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_onetimeauth.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_onetimeauth_poly1305.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_scalarmult.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_scalarmult_curve25519.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_scalarmult_ed25519.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_secretbox.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_secretbox_xchacha20poly1305.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_secretbox_xsalsa20poly1305.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_secretstream_xchacha20poly1305.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_shorthash.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_shorthash_siphash24.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_sign.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_sign_ed25519.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_sign_edwards25519sha512batch.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_stream.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_stream_chacha20.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_stream_salsa20.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_stream_salsa2012.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_stream_salsa208.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_stream_xchacha20.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_stream_xsalsa20.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_verify_16.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_verify_32.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_verify_64.h" />
+    <ClInclude Include="..\..\sodium\sodium_dolbeau_chacha20-avx2.h" />
+    <ClInclude Include="..\..\sodium\sodium_dolbeau_chacha20-ssse3.h" />
+    <ClInclude Include="..\..\sodium\sodium_dolbeau_u0.h" />
+    <ClInclude Include="..\..\sodium\sodium_dolbeau_u1.h" />
+    <ClInclude Include="..\..\sodium\sodium_dolbeau_u4.h" />
+    <ClInclude Include="..\..\sodium\sodium_dolbeau_u8.h" />
+    <ClInclude Include="..\..\sodium\sodium_export.h" />
+    <ClInclude Include="..\..\sodium\sodium_fe_25_5_base.h" />
+    <ClInclude Include="..\..\sodium\sodium_fe_25_5_base2.h" />
+    <ClInclude Include="..\..\sodium\sodium_fe_25_5_constants.h" />
+    <ClInclude Include="..\..\sodium\sodium_fe_25_5_fe.h" />
+    <ClInclude Include="..\..\sodium\sodium_fe_51_base.h" />
+    <ClInclude Include="..\..\sodium\sodium_fe_51_base2.h" />
+    <ClInclude Include="..\..\sodium\sodium_fe_51_constants.h" />
+    <ClInclude Include="..\..\sodium\sodium_fe_51_fe.h" />
+    <ClInclude Include="..\..\sodium\sodium_onetimeauth_poly1305.h" />
+    <ClInclude Include="..\..\sodium\sodium_poly1305-sse2.h" />
+    <ClInclude Include="..\..\sodium\sodium_poly1305_donna.h" />
+    <ClInclude Include="..\..\sodium\sodium_poly1305_donna32.h" />
+    <ClInclude Include="..\..\sodium\sodium_poly1305_donna64.h" />
+    <ClInclude Include="..\..\sodium\sodium_private_chacha20_ietf_ext.h" />
+    <ClInclude Include="..\..\sodium\sodium_private_common.h" />
+    <ClInclude Include="..\..\sodium\sodium_private_ed25519_ref10.h" />
+    <ClInclude Include="..\..\sodium\sodium_private_ed25519_ref10_fe_25_5.h" />
+    <ClInclude Include="..\..\sodium\sodium_private_ed25519_ref10_fe_51.h" />
+    <ClInclude Include="..\..\sodium\sodium_private_implementations.h" />
+    <ClInclude Include="..\..\sodium\sodium_private_mutex.h" />
+    <ClInclude Include="..\..\sodium\sodium_private_sse2_64_32.h" />
+    <ClInclude Include="..\..\sodium\sodium_randombytes.h" />
+    <ClInclude Include="..\..\sodium\sodium_randombytes_nativeclient.h" />
+    <ClInclude Include="..\..\sodium\sodium_randombytes_salsa20_random.h" />
+    <ClInclude Include="..\..\sodium\sodium_randombytes_sysrandom.h" />
+    <ClInclude Include="..\..\sodium\sodium_ref10_sign_ed25519.h" />
+    <ClInclude Include="..\..\sodium\sodium_ref10_x25519.h" />
+    <ClInclude Include="..\..\sodium\sodium_runtime.h" />
+    <ClInclude Include="..\..\sodium\sodium_salsa20-ref.h" />
+    <ClInclude Include="..\..\sodium\sodium_salsa20-xmm6.h" />
+    <ClInclude Include="..\..\sodium\sodium_sandy2x_consts_namespace.h" />
+    <ClInclude Include="..\..\sodium\sodium_sandy2x_curve25519.h" />
+    <ClInclude Include="..\..\sodium\sodium_sandy2x_fe.h" />
+    <ClInclude Include="..\..\sodium\sodium_sandy2x_fe51.h" />
+    <ClInclude Include="..\..\sodium\sodium_sandy2x_fe51_namespace.h" />
+    <ClInclude Include="..\..\sodium\sodium_sandy2x_ladder.h" />
+    <ClInclude Include="..\..\sodium\sodium_sandy2x_ladder_base.h" />
+    <ClInclude Include="..\..\sodium\sodium_sandy2x_ladder_base_namespace.h" />
+    <ClInclude Include="..\..\sodium\sodium_sandy2x_ladder_namespace.h" />
+    <ClInclude Include="..\..\sodium\sodium_scalarmult_curve25519.h" />
+    <ClInclude Include="..\..\sodium\sodium_stream_chacha20.h" />
+    <ClInclude Include="..\..\sodium\sodium_stream_salsa20.h" />
+    <ClInclude Include="..\..\sodium\sodium_utils.h" />
+    <ClInclude Include="..\..\sodium\sodium_version.h" />
+    <ClInclude Include="..\..\sodium\sodium_xmm6int_salsa20-avx2.h" />
+    <ClInclude Include="..\..\sodium\sodium_xmm6int_salsa20-sse2.h" />
+    <ClInclude Include="..\..\sodium\sodium_xmm6int_u0.h" />
+    <ClInclude Include="..\..\sodium\sodium_xmm6int_u1.h" />
+    <ClInclude Include="..\..\sodium\sodium_xmm6int_u4.h" />
+    <ClInclude Include="..\..\sodium\sodium_xmm6int_u8.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\sodium\sodium_aead_chacha20poly1305.c" />
+    <ClCompile Include="..\..\sodium\sodium_aead_xchacha20poly1305.c" />
+    <ClCompile Include="..\..\sodium\sodium_blake2b-compress-avx2.c" />
+    <ClCompile Include="..\..\sodium\sodium_blake2b-compress-ref.c" />
+    <ClCompile Include="..\..\sodium\sodium_blake2b-compress-sse41.c" />
+    <ClCompile Include="..\..\sodium\sodium_blake2b-compress-ssse3.c" />
+    <ClCompile Include="..\..\sodium\sodium_blake2b-ref.c" />
+    <ClCompile Include="..\..\sodium\sodium_box_curve25519xchacha20poly1305.c" />
+    <ClCompile Include="..\..\sodium\sodium_box_curve25519xsalsa20poly1305.c" />
+    <ClCompile Include="..\..\sodium\sodium_box_seal_curve25519xchacha20poly1305.c" />
+    <ClCompile Include="..\..\sodium\sodium_chacha20-ref.c" />
+    <ClCompile Include="..\..\sodium\sodium_codecs.c" />
+    <ClCompile Include="..\..\sodium\sodium_core.c" />
+    <ClCompile Include="..\..\sodium\sodium_core_ed25519.c" />
+    <ClCompile Include="..\..\sodium\sodium_core_hchacha20.c" />
+    <ClCompile Include="..\..\sodium\sodium_core_hsalsa20.c" />
+    <ClCompile Include="..\..\sodium\sodium_core_hsalsa20_ref2.c" />
+    <ClCompile Include="..\..\sodium\sodium_core_salsa_ref.c" />
+    <ClCompile Include="..\..\sodium\sodium_crypto_box.c" />
+    <ClCompile Include="..\..\sodium\sodium_crypto_box_easy.c" />
+    <ClCompile Include="..\..\sodium\sodium_crypto_generichash.c" />
+    <ClCompile Include="..\..\sodium\sodium_crypto_kx.c" />
+    <ClCompile Include="..\..\sodium\sodium_crypto_scalarmult.c" />
+    <ClCompile Include="..\..\sodium\sodium_crypto_secretbox.c" />
+    <ClCompile Include="..\..\sodium\sodium_crypto_secretbox_easy.c" />
+    <ClCompile Include="..\..\sodium\sodium_crypto_sign.c" />
+    <ClCompile Include="..\..\sodium\sodium_dolbeau_chacha20-avx2.c" />
+    <ClCompile Include="..\..\sodium\sodium_dolbeau_chacha20-ssse3.c" />
+    <ClCompile Include="..\..\sodium\sodium_generichash_blake2.c" />
+    <ClCompile Include="..\..\sodium\sodium_generichash_blake2b.c" />
+    <ClCompile Include="..\..\sodium\sodium_hash_sha512.c" />
+    <ClCompile Include="..\..\sodium\sodium_hash_sha512_cp.c" />
+    <ClCompile Include="..\..\sodium\sodium_onetimeauth_poly1305.c" />
+    <ClCompile Include="..\..\sodium\sodium_poly1305-sse2.c" />
+    <ClCompile Include="..\..\sodium\sodium_poly1305_donna.c" />
+    <ClCompile Include="..\..\sodium\sodium_randombytes.c" />
+    <ClCompile Include="..\..\sodium\sodium_randombytes_salsa20_random.c" />
+    <ClCompile Include="..\..\sodium\sodium_randombytes_sysrandom.c" />
+    <ClCompile Include="..\..\sodium\sodium_ref10_ed25519.c" />
+    <ClCompile Include="..\..\sodium\sodium_ref10_keypair.c" />
+    <ClCompile Include="..\..\sodium\sodium_ref10_open.c" />
+    <ClCompile Include="..\..\sodium\sodium_ref10_scalarmult_ed25519_ref10.c" />
+    <ClCompile Include="..\..\sodium\sodium_ref10_sign.c" />
+    <ClCompile Include="..\..\sodium\sodium_ref10_x25519.c" />
+    <ClCompile Include="..\..\sodium\sodium_runtime.c" />
+    <ClCompile Include="..\..\sodium\sodium_salsa20-ref.c" />
+    <ClCompile Include="..\..\sodium\sodium_salsa20-xmm6.c" />
+    <ClCompile Include="..\..\sodium\sodium_sandy2x_curve25519.c" />
+    <ClCompile Include="..\..\sodium\sodium_sandy2x_fe51_invert.c" />
+    <ClCompile Include="..\..\sodium\sodium_sandy2x_fe_frombytes.c" />
+    <ClCompile Include="..\..\sodium\sodium_scalarmult_curve25519.c" />
+    <ClCompile Include="..\..\sodium\sodium_secretbox_xchacha20poly1305.c" />
+    <ClCompile Include="..\..\sodium\sodium_secretbox_xsalsa20poly1305.c" />
+    <ClCompile Include="..\..\sodium\sodium_sign_ed25519.c" />
+    <ClCompile Include="..\..\sodium\sodium_stream_chacha20.c" />
+    <ClCompile Include="..\..\sodium\sodium_stream_salsa20.c" />
+    <ClCompile Include="..\..\sodium\sodium_stream_xchacha20.c" />
+    <ClCompile Include="..\..\sodium\sodium_stream_xsalsa20.c" />
+    <ClCompile Include="..\..\sodium\sodium_utils.c" />
+    <ClCompile Include="..\..\sodium\sodium_verify.c" />
+    <ClCompile Include="..\..\sodium\sodium_version.c" />
+    <ClCompile Include="..\..\sodium\sodium_xmm6int_salsa20-avx2.c" />
+    <ClCompile Include="..\..\sodium\sodium_xmm6int_salsa20-sse2.c" />
+    <ClCompile Include="..\..\source\next.cpp" />
+    <ClCompile Include="..\..\source\next_address.cpp" />
+    <ClCompile Include="..\..\source\next_autodetect.cpp" />
+    <ClCompile Include="..\..\source\next_base64.cpp" />
+    <ClCompile Include="..\..\source\next_client.cpp" />
+    <ClCompile Include="..\..\source\next_config.cpp" />
+    <ClCompile Include="..\..\source\next_crypto.cpp" />
+    <ClCompile Include="..\..\source\next_hash.cpp" />
+    <ClCompile Include="..\..\source\next_packets.cpp" />
+    <ClCompile Include="..\..\source\next_packet_filter.cpp" />
+    <ClCompile Include="..\..\source\next_platform_gdk.cpp" />
+    <ClCompile Include="..\..\source\next_platform_linux.cpp" />
+    <ClCompile Include="..\..\source\next_platform_mac.cpp" />
+    <ClCompile Include="..\..\source\next_platform_ps4.cpp" />
+    <ClCompile Include="..\..\source\next_platform_ps5.cpp" />
+    <ClCompile Include="..\..\source\next_platform_switch.cpp" />
+    <ClCompile Include="..\..\source\next_platform_windows.cpp" />
+    <ClCompile Include="..\..\source\next_route_manager.cpp" />
+    <ClCompile Include="..\..\source\next_server.cpp" />
+    <ClCompile Include="..\..\source\next_tests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\sodium\sodium_salsa20-xmm6_asm.S" />
+    <None Include="..\..\sodium\sodium_sandy2x.S" />
+    <None Include="..\..\sodium\sodium_sandy2x_consts.S" />
+    <None Include="..\..\sodium\sodium_sandy2x_fe51_mul.S" />
+    <None Include="..\..\sodium\sodium_sandy2x_fe51_nsquare.S" />
+    <None Include="..\..\sodium\sodium_sandy2x_fe51_pack.S" />
+    <None Include="..\..\sodium\sodium_sandy2x_ladder.S" />
+    <None Include="..\..\sodium\sodium_sandy2x_ladder_base.S" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <RootNamespace>gdk</RootNamespace>
+    <ProjectGuid>{237dda8c-95e6-414d-921c-746c042efeb5}</ProjectGuid>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <Keyword>Win32Proj</Keyword>
+    <!-- - - - -->
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <TargetRuntime>Native</TargetRuntime>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>next</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.Scarlett.x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <EmbedManifest>false</EmbedManifest>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.XboxOne.x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <EmbedManifest>false</EmbedManifest>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.Scarlett.x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <EmbedManifest>false</EmbedManifest>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.XboxOne.x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <EmbedManifest>false</EmbedManifest>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.Scarlett.x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.XboxOne.x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.Scarlett.x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.XboxOne.x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.Scarlett.x64'">
+    <ReferencePath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</ReferencePath>
+    <LibraryPath>$(Console_SdkLibPath)</LibraryPath>
+    <LibraryWPath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</LibraryWPath>
+    <IncludePath>$(Console_SdkIncludeRoot)</IncludePath>
+    <ExecutablePath>$(Console_SdkRoot)bin;$(Console_SdkToolPath);$(ExecutablePath)</ExecutablePath>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>next/seriesx/release/</OutDir>
+    <IntDir>next/seriesx/release/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.XboxOne.x64'">
+    <ReferencePath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</ReferencePath>
+    <LibraryPath>$(Console_SdkLibPath)</LibraryPath>
+    <LibraryWPath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</LibraryWPath>
+    <IncludePath>$(Console_SdkIncludeRoot)</IncludePath>
+    <ExecutablePath>$(Console_SdkRoot)bin;$(Console_SdkToolPath);$(ExecutablePath)</ExecutablePath>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>next\xboxone\release\</OutDir>
+    <IntDir>next\xboxone\release\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.Scarlett.x64'">
+    <ReferencePath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</ReferencePath>
+    <LibraryPath>$(Console_SdkLibPath)</LibraryPath>
+    <LibraryWPath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</LibraryWPath>
+    <IncludePath>$(Console_SdkIncludeRoot)</IncludePath>
+    <ExecutablePath>$(Console_SdkRoot)bin;$(Console_SdkToolPath);$(ExecutablePath)</ExecutablePath>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>next/seriesx/debug/</OutDir>
+    <IntDir>next/seriesx/debug/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.XboxOne.x64'">
+    <ReferencePath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</ReferencePath>
+    <LibraryPath>$(Console_SdkLibPath)</LibraryPath>
+    <LibraryWPath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</LibraryWPath>
+    <IncludePath>$(Console_SdkIncludeRoot)</IncludePath>
+    <ExecutablePath>$(Console_SdkRoot)bin;$(Console_SdkToolPath);$(ExecutablePath)</ExecutablePath>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>next/xboxone/debug/</OutDir>
+    <IntDir>next/xboxone/debug/</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.Scarlett.x64'">
+    <Link>
+      <AdditionalDependencies>$(Console_Libs);%(XboxExtensionsDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NEXT_DEVELOPMENT=1;NDEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\include;..\..\sodium</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Gaming.Xbox.XboxOne.x64'">
+    <Link>
+      <AdditionalDependencies>$(Console_Libs);%(XboxExtensionsDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NEXT_DEVELOPMENT=1;NDEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\include;..\..\sodium</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.Scarlett.x64'">
+    <Link>
+      <AdditionalDependencies>$(Console_Libs);%(XboxExtensionsDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <MinimalRebuild>false</MinimalRebuild>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>NEXT_DEVELOPMENT=1;NEXT_DEBUG=1;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\include;..\..\sodium</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Gaming.Xbox.XboxOne.x64'">
+    <Link>
+      <AdditionalDependencies>$(Console_Libs);%(XboxExtensionsDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <ClCompile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <MinimalRebuild>false</MinimalRebuild>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>NEXT_DEVELOPMENT=1;NEXT_DEBUG=1;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\include;..\..\sodium</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

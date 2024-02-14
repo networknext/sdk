@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "next", "next.vcxproj", "{07557A06-FB1F-400F-879E-FBA6BA863732}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client", "client.vcxproj", "{E0041F5E-3BA5-479A-8923-1675DC5009AB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{07557A06-FB1F-400F-879E-FBA6BA863732} = {07557A06-FB1F-400F-879E-FBA6BA863732}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Prospero = Debug|Prospero
+		Release|Prospero = Release|Prospero
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{07557A06-FB1F-400F-879E-FBA6BA863732}.Debug|Prospero.ActiveCfg = Debug|Prospero
+		{07557A06-FB1F-400F-879E-FBA6BA863732}.Debug|Prospero.Build.0 = Debug|Prospero
+		{07557A06-FB1F-400F-879E-FBA6BA863732}.Release|Prospero.ActiveCfg = Release|Prospero
+		{07557A06-FB1F-400F-879E-FBA6BA863732}.Release|Prospero.Build.0 = Release|Prospero
+		{E0041F5E-3BA5-479A-8923-1675DC5009AB}.Debug|Prospero.ActiveCfg = Debug|Prospero
+		{E0041F5E-3BA5-479A-8923-1675DC5009AB}.Debug|Prospero.Build.0 = Debug|Prospero
+		{E0041F5E-3BA5-479A-8923-1675DC5009AB}.Release|Prospero.ActiveCfg = Release|Prospero
+		{E0041F5E-3BA5-479A-8923-1675DC5009AB}.Release|Prospero.Build.0 = Release|Prospero
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {753A2603-524B-40FE-910E-F3359F94A952}
+	EndGlobalSection
+EndGlobal
