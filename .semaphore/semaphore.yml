@@ -109,7 +109,7 @@ blocks:
           commands:
             - & devenv build/switch/switch.sln /Build Release
 
-  - name: "XBox"
+  - name: "Xbox"
     dependencies: []
     task:
       prologue:
@@ -121,16 +121,16 @@ blocks:
       jobs:
         - name: xboxone debug
           commands:
-            - & devenv build/gdk/gdk.sln /Build Debug
+            - & devenv build/gdk/gdk.sln /Build Debug|Gaming.Xbox.XBoxOne.x64
 
         - name: xboxone release
           commands:
-            - & devenv build/gdk/gdk.sln /Build Release
+            - & devenv build/gdk/gdk.sln /Build Release|Gaming.Xbox.XBoxOne.x64
 
         - name: seriesx debug
           commands:
-            - & devenv build/gdk/gdk.sln /Build Debug
+            - & devenv build/gdk/gdk.sln /Build Debug|Gaming.Xbox.Scarlett.x64
 
         - name: seriesx release
           commands:
-            - & devenv build/gdk/gdk.sln /Build Release
+            - & devenv build/gdk/gdk.sln /Build Release||Gaming.Xbox.Scarlett.x64
