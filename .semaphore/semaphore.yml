@@ -19,16 +19,19 @@ blocks:
         machine:
           type: s1-consoles
       jobs:
+
         - name: test (debug)
           commands:
             - & premake5 vs2019
             - & devenv visualstudio/next.sln /Build debug
             - & ./bin/test
+        
         - name: test (release)
           commands:
             - & premake5 vs2019
             - & devenv visualstudio/next.sln /Build release
             - & ./bin/test
+        
         - name: test (memorycheck)
           commands:
             - & premake5 vs2019
@@ -45,15 +48,45 @@ blocks:
         machine:
           type: s1-consoles
       jobs:
+
         - name: win32 debug
           commands:
             - & devenv build/win32/win32.sln /Build Debug
+
         - name: win32 release
           commands:
             - & devenv build/win32/win32.sln /Build Release
+
         - name: win64 debug
           commands:
             - & devenv build/win64/win64.sln /Build Debug
+
         - name: win64 release
           commands:
             - & devenv build/win64/win64.sln /Build Release
+
+  - name: "Playstation"
+    dependencies: []
+    task:
+      prologue:
+        commands:
+          - checkout
+      agent:
+        machine:
+          type: s1-consoles
+      jobs:
+        - name: ps4 debug
+          commands:
+            - & devenv build/ps4/ps4.sln /Build Debug
+
+        - name: ps4 release
+          commands:
+            - & devenv build/ps4/ps4.sln /Build Release
+
+        - name: ps5 debug
+          commands:
+            - & devenv build/ps5/ps5.sln /Build Debug
+
+        - name: ps5 release
+          commands:
+            - & devenv build/ps5/ps5.sln /Build Release
