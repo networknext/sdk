@@ -24,4 +24,5 @@ blocks:
             - env_var: CONFIG
               values: [ "debug", "release" ]
           commands:
+            - echo $CONFIG
             - .\build.bat
