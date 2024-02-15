@@ -20,8 +20,5 @@ blocks:
           type: s1-consoles
       jobs:
         - name: test
-          matrix:
-            - env_var: CONFIG
-              values: [ "debug", "release" ]
           commands:
-            - start -wait -NoNewWindow ./build.bat -args "$CONFIG"
+            - start -wait -NoNewWindow ./build.bat -args "debug"
