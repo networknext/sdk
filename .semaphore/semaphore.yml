@@ -24,4 +24,4 @@ blocks:
             - env_var: CONFIG
               values: [ "debug", "release" ]
           commands:
-            - Start-Process -FilePath "./build.bat"
+            - start -wait -NoNewWindow ./build.bat -args "$CONFIG"
