@@ -19,7 +19,15 @@ blocks:
         machine:
           type: s1-consoles
       jobs:
-        - name: test
+        - name: test (debug)
+          commands:
+            - & premake5 vs2019
+            - & devenv visualstudio/next.sln /Build debug
+        - name: test (release)
           commands:
             - & premake5 vs2019
             - & devenv visualstudio/next.sln /Build release
+        - name: test (memorycheck)
+          commands:
+            - & premake5 vs2019
+            - & devenv visualstudio/next.sln /Build memorycheck
