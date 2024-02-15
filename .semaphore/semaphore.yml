@@ -21,4 +21,4 @@ blocks:
       jobs:
         - name: test
           commands:
-            - & "c:\Progra~1\Micros~1\2022\Community\Common7\IDE\devenv.com" visualstudio/next.sln /Build release
+            - & c:\Progra~1\Micros~1\2022\Community\Common7\IDE\devenv.com visualstudio/next.sln /Build release
