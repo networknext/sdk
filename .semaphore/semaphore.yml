@@ -90,3 +90,21 @@ blocks:
         - name: ps5 release
           commands:
             - & devenv build/ps5/ps5.sln /Build Release
+
+  - name: "Nintendo"
+    dependencies: []
+    task:
+      prologue:
+        commands:
+          - checkout
+      agent:
+        machine:
+          type: s1-consoles
+      jobs:
+        - name: switch debug
+          commands:
+            - & devenv build/switch/switch.sln /Build Debug
+
+        - name: switch release
+          commands:
+            - & devenv build/switch/switch.sln /Build Release
