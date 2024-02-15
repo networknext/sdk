@@ -50,10 +50,10 @@ blocks:
             - & devenv build/win32/win32.sln /Build Debug
         - name: win32 release
           commands:
-            - & devenv build/win32/win32.sln /Build Debug
+            - & devenv build/win32/win32.sln /Build Release
         - name: win64 debug
           commands:
             - & devenv build/win64/win64.sln /Build Debug
         - name: win64 release
           commands:
-            - & devenv build/win64/win64.sln /Build Debug
+            - & devenv build/win64/win64.sln /Build Release
