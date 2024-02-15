@@ -92,9 +92,9 @@ blocks:
         - name: test
           matrix:
             - env_var: CONFIG
-              values: [ "debug_portable", "release_portable" ]
+              values: [ "debug", "release" ]
           commands:
-            - Write-Output "fuck powershell"
+            - .\build.bat a b c
 
   - name: "Soak Test"
     dependencies: []
