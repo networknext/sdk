@@ -91,7 +91,7 @@ blocks:
         jobs:
           name: test
         commands:
-          & "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.com" build\win64\win64.sln /build Debug
+          "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.com" build\win64\win64.sln /build Debug
 
   - name: "Soak Test"
     dependencies: []
