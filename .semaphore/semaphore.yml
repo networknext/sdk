@@ -21,4 +21,4 @@ blocks:
       jobs:
         - name: test
           commands:
-            - start -wait -NoNewWindow ./build.bat -args "debug"
+            - & ./build.bat debug
