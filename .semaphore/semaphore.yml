@@ -21,4 +21,5 @@ blocks:
       jobs:
         - name: test
           commands:
+            - & premake5 vs2019
             - & devenv visualstudio/next.sln /Build release
