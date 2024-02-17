@@ -35,11 +35,11 @@
 #define NOMINMAX
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
-#ifndef NEXT_UNREAL_ENGINE
+#if !NEXT_UNREAL_ENGINE
 #include <windows.h>
-#else // #ifndef NEXT_UNREAL_ENGINE
+#else // #if !NEXT_UNREAL_ENGINE
 #include "Windows/MinWindows.h"
-#endif // #ifndef NEXT_UNREAL_ENGINE
+#endif // #if !NEXT_UNREAL_ENGINE
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <ws2ipdef.h>

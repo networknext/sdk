@@ -32,13 +32,13 @@
 #include "Windows/PreWindowsApi.h"
 #endif // #if NEXT_UNREAL_ENGINE
 
-#ifndef NEXT_UNREAL_ENGINE
+#if !NEXT_UNREAL_ENGINE
 #define _WINSOCKAPI_
 #include <windows.h>
 #include <winsock2.h>
-#else // #ifndef NEXT_UNREAL_ENGINE
+#else // #if !NEXT_UNREAL_ENGINE
 #include "Windows/MinWindows.h"
-#endif // #ifndef NEXT_UNREAL_ENGINE
+#endif // #if !NEXT_UNREAL_ENGINE
 
 // -------------------------------------
 
