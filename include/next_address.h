@@ -37,20 +37,20 @@ struct next_address_t
 };
 #endif 
 
-int next_address_parse( struct next_address_t * address, const char * address_string );
+NEXT_EXPORT_FUNC int next_address_parse( struct next_address_t * address, const char * address_string );
 
-const char * next_address_to_string( const struct next_address_t * address, char * buffer );
+NEXT_EXPORT_FUNC const char * next_address_to_string( const struct next_address_t * address, char * buffer );
 
-const char * next_address_to_string_without_port( const struct next_address_t * address, char * buffer );
+NEXT_EXPORT_FUNC const char * next_address_to_string_without_port( const struct next_address_t * address, char * buffer );
 
-bool next_address_equal( const struct next_address_t * a, const struct next_address_t * b );
+NEXT_EXPORT_FUNC bool next_address_equal( const struct next_address_t * a, const struct next_address_t * b );
 
-void next_address_anonymize( struct next_address_t * address );
+NEXT_EXPORT_FUNC void next_address_anonymize( struct next_address_t * address );
 
-bool next_address_is_ipv4_in_ipv6( struct next_address_t * address );
+NEXT_EXPORT_FUNC bool next_address_is_ipv4_in_ipv6( struct next_address_t * address );
 
-void next_address_convert_ipv6_to_ipv4( struct next_address_t * address );
+NEXT_EXPORT_FUNC void next_address_convert_ipv6_to_ipv4( struct next_address_t * address );
 
-void next_address_convert_ipv4_to_ipv6( struct next_address_t * address );
+NEXT_EXPORT_FUNC void next_address_convert_ipv4_to_ipv6( struct next_address_t * address );
 
 #endif // #ifndef NEXT_ADDRESS_H

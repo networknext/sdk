@@ -33,78 +33,74 @@ struct next_address_t;
 #include "next_platform_mac.h"
 #include "next_platform_linux.h"
 #include "next_platform_windows.h"
-#include "next_platform_ps4.h"
-#include "next_platform_ps5.h"
-#include "next_platform_switch.h"
-#include "next_platform_gdk.h"
 
 typedef void (*next_platform_thread_func_t)(void*);
 
 // ----------------------------------------------------------------
 
-int next_platform_init();
+NEXT_EXPORT_FUNC int next_platform_init();
 
-void next_platform_term();
-
-// ----------------------------------------------------------------
-
-int next_platform_id();
-
-int next_platform_connection_type();
-
-double next_platform_time();
-
-void next_platform_sleep( double time );
-
-const char * next_platform_getenv( const char * var );
-
-uint16_t next_platform_ntohs( uint16_t in );
-
-uint16_t next_platform_htons( uint16_t in );
-
-int next_platform_inet_pton4( const char * address_string, uint32_t * address_out );
-
-int next_platform_inet_pton6( const char * address_string, uint16_t * address_out );
-
-int next_platform_inet_ntop6( const uint16_t * address, char * address_string, size_t address_string_size );
-
-int next_platform_hostname_resolve( const char * hostname, const char * port, next_address_t * address );
-
-uint16_t next_platform_preferred_client_port();
-
-bool next_platform_client_dual_stack();
+NEXT_EXPORT_FUNC void next_platform_term();
 
 // ----------------------------------------------------------------
 
-next_platform_socket_t * next_platform_socket_create( void * context, next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size, bool enable_packet_tagging );
+NEXT_EXPORT_FUNC int next_platform_id();
 
-void next_platform_socket_destroy( next_platform_socket_t * socket );
+NEXT_EXPORT_FUNC int next_platform_connection_type();
 
-void next_platform_socket_send_packet( next_platform_socket_t * socket, const next_address_t * to, const void * packet_data, int packet_bytes );
+NEXT_EXPORT_FUNC double next_platform_time();
 
-int next_platform_socket_receive_packet( next_platform_socket_t * socket, next_address_t * from, void * packet_data, int max_packet_size );
+NEXT_EXPORT_FUNC void next_platform_sleep( double time );
+
+NEXT_EXPORT_FUNC const char * next_platform_getenv( const char * var );
+
+NEXT_EXPORT_FUNC uint16_t next_platform_ntohs( uint16_t in );
+
+NEXT_EXPORT_FUNC uint16_t next_platform_htons( uint16_t in );
+
+NEXT_EXPORT_FUNC int next_platform_inet_pton4( const char * address_string, uint32_t * address_out );
+
+NEXT_EXPORT_FUNC int next_platform_inet_pton6( const char * address_string, uint16_t * address_out );
+
+NEXT_EXPORT_FUNC int next_platform_inet_ntop6( const uint16_t * address, char * address_string, size_t address_string_size );
+
+NEXT_EXPORT_FUNC int next_platform_hostname_resolve( const char * hostname, const char * port, struct next_address_t * address );
+
+NEXT_EXPORT_FUNC uint16_t next_platform_preferred_client_port();
+
+NEXT_EXPORT_FUNC bool next_platform_client_dual_stack();
 
 // ----------------------------------------------------------------
 
-next_platform_thread_t * next_platform_thread_create( void * context, next_platform_thread_func_t func, void * arg );
+NEXT_EXPORT_FUNC struct next_platform_socket_t * next_platform_socket_create( void * context, struct next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size, bool enable_packet_tagging );
 
-void next_platform_thread_join( next_platform_thread_t * thread );
+NEXT_EXPORT_FUNC void next_platform_socket_destroy( struct next_platform_socket_t * socket );
 
-void next_platform_thread_destroy( next_platform_thread_t * thread );
+NEXT_EXPORT_FUNC void next_platform_socket_send_packet( struct next_platform_socket_t * socket, const struct next_address_t * to, const void * packet_data, int packet_bytes );
 
-void next_platform_client_thread_priority( next_platform_thread_t * thread );
-
-void next_platform_server_thread_priority( next_platform_thread_t * thread );
+NEXT_EXPORT_FUNC int next_platform_socket_receive_packet( struct next_platform_socket_t * socket, struct next_address_t * from, void * packet_data, int max_packet_size );
 
 // ----------------------------------------------------------------
 
-int next_platform_mutex_create( struct next_platform_mutex_t * mutex );
+NEXT_EXPORT_FUNC struct next_platform_thread_t * next_platform_thread_create( void * context, next_platform_thread_func_t func, void * arg );
 
-void next_platform_mutex_destroy( struct next_platform_mutex_t * mutex );
+NEXT_EXPORT_FUNC void next_platform_thread_join( struct next_platform_thread_t * thread );
 
-void next_platform_mutex_acquire( struct next_platform_mutex_t * mutex );
+NEXT_EXPORT_FUNC void next_platform_thread_destroy( struct next_platform_thread_t * thread );
 
-void next_platform_mutex_release( struct next_platform_mutex_t * mutex );
+NEXT_EXPORT_FUNC void next_platform_client_thread_priority( struct next_platform_thread_t * thread );
+
+NEXT_EXPORT_FUNC void next_platform_server_thread_priority( struct next_platform_thread_t * thread );
+
+// ----------------------------------------------------------------
+
+NEXT_EXPORT_FUNC int next_platform_mutex_create( struct next_platform_mutex_t * mutex );
+
+NEXT_EXPORT_FUNC void next_platform_mutex_destroy( struct next_platform_mutex_t * mutex );
+
+NEXT_EXPORT_FUNC void next_platform_mutex_acquire( struct next_platform_mutex_t * mutex );
+
+NEXT_EXPORT_FUNC void next_platform_mutex_release( struct next_platform_mutex_t * mutex );
 
 #ifdef __cplusplus
 
