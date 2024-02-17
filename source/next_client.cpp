@@ -606,8 +606,10 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
     const int packet_id = packet_data[0];
 
 #if NEXT_ASSERTS
-    char address_buffer[NEXT_MAX_ADDRESS_STRING_LENGTH];
-    next_printf( NEXT_LOG_LEVEL_SPAM, "client processing packet type %d from %s (%d bytes)", packet_id, next_address_to_string( &client->server_address, address_buffer ), packet_bytes );
+    {
+        char address_buffer[NEXT_MAX_ADDRESS_STRING_LENGTH];
+        next_printf( NEXT_LOG_LEVEL_SPAM, "client processing packet type %d from %s (%d bytes)", packet_id, next_address_to_string( &client->server_address, address_buffer ), packet_bytes );
+    }
 #endif // #if NEXT_ASSERTS
 
     // run packet filters
