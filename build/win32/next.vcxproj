@@ -331,7 +331,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\include;..\..\sodium</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NEXT_DEVELOPMENT=1;NEXT_DEBUG=1;NEXT_ASSERTS=1;SODIUM_STATIC;_DEBUG;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NEXT_DEVELOPMENT=1;SODIUM_STATIC;_DEBUG;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ProgramDataBaseFileName>$(OutDir)\$(TargetName).pdb</ProgramDataBaseFileName>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
