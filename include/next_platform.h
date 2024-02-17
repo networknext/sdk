@@ -33,6 +33,10 @@ struct next_address_t;
 #include "next_platform_mac.h"
 #include "next_platform_linux.h"
 #include "next_platform_windows.h"
+#include "next_platform_ps4.h"
+#include "next_platform_ps5.h"
+#include "next_platform_gdk.h"
+#include "next_platform_switch.h"
 
 typedef void (*next_platform_thread_func_t)(void*);
 
