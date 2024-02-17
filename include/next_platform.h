@@ -108,8 +108,6 @@ void next_platform_mutex_release( struct next_platform_mutex_t * mutex );
 
 #ifdef __cplusplus
 
-//#define NEXT_SPIKE_TRACKING 1
-
 struct next_platform_mutex_helper_t
 {
     next_platform_mutex_t * mutex;

@@ -20,7 +20,6 @@
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "next.h"
 #include "next_client.h"
 #include "next_memory_checks.h"
 #include "next_queue.h"
@@ -606,10 +605,10 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
 
     const int packet_id = packet_data[0];
 
-#if NEXT_ASSERT
+#if NEXT_ASSERTS
     char address_buffer[NEXT_MAX_ADDRESS_STRING_LENGTH];
     next_printf( NEXT_LOG_LEVEL_SPAM, "client processing packet type %d from %s (%d bytes)", packet_id, next_address_to_string( &client->server_address, address_buffer ), packet_bytes );
-#endif // #if NEXT_ASSERT
+#endif // #if NEXT_ASSERTS
 
     // run packet filters
     {
@@ -771,7 +770,7 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
             return;
         }
 
-#if NEXT_DEBUG
+#if NEXT_ASSERTS
 
         const uint8_t * debug_packet_data = client->upgrade_response_packet_data;
         const int debug_packet_bytes = client->upgrade_response_packet_bytes;
@@ -782,7 +781,7 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
         next_assert( next_basic_packet_filter( debug_packet_data, debug_packet_bytes ) );
         next_assert( next_advanced_packet_filter( debug_packet_data, client->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, debug_packet_bytes ) );
 
-#endif // #if NEXT_DEBUG
+#endif // #if NEXT_ASSERTS
 
         client->sending_upgrade_response = true;
         client->upgrade_response_start_time = next_platform_time();

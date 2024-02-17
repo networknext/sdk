@@ -30,21 +30,25 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#if !defined(NEXT_DEVELOPMENT)
+#if !defined( NEXT_DEVELOPMENT )
+#define NEXT_DEVELOPMENT 0
+#endif // #if !defined( NEXT_DEVELOPMENT )
+
+#if !NEXT_DEVELOPMENT
 
     #define NEXT_VERSION_FULL                               "1.0.0"
     #define NEXT_VERSION_MAJOR_INT                                1
     #define NEXT_VERSION_MINOR_INT                                0
     #define NEXT_VERSION_PATCH_INT                                0
 
-#else // !defined(NEXT_DEVELOPMENT)
+#else // !NEXT_DEVELOPMENT
 
     #define NEXT_VERSION_FULL                                 "dev"
     #define NEXT_VERSION_MAJOR_INT                              255
     #define NEXT_VERSION_MINOR_INT                              255
     #define NEXT_VERSION_PATCH_INT                              255
 
-#endif // !defined(NEXT_DEVELOPMENT)
+#endif // !NEXT_DEVELOPMENT
 
 #define NEXT_OK                                                   0
 #define NEXT_ERROR                                               -1
@@ -152,9 +156,21 @@
 #define NEXT_PLATFORM_CAN_RUN_SERVER 1
 #endif // #if NEXT_PLATFORM != NEXT_PLATFORM_XBOX_ONE && NEXT_PLATFORM != NEXT_PLATFORM_GDK
 
+#if !defined(NEXT_UNREAL_ENGINE)
+#define NEXT_UNREAL_ENGINE 0
+#endif // #if !defined(NEXT_UNREAL_ENGINE)
+
 #if NEXT_UNREAL_ENGINE && NEXT_PLATFORM == NEXT_PLATFORM_PS5 && !defined(PLATFORM_PS5)
 #error Building unreal engine on PS5, but PLATFORM_PS5 is not defined! Please follow steps in README.md for PS5 platform setup!
 #endif // #if NEXT_UNREAL_ENGINE && NEXT_PLATFORM == NEXT_PLATFORM_PS5 && !defined(PLATFORM_PS5)
+
+#if !defined(NEXT_SPIKE_TRACKING)
+#define NEXT_SPIKE_TRACKING 0
+#endif // #if !defined(NEXT_SPIKE_TRACKING)
+
+#if !defined(NEXT_ENABLE_MEMORY_CHECKS)
+#define NEXT_ENABLE_MEMORY_CHECKS 0
+#endif // #if !defined(NEXT_ENABLE_MEMORY_CHECKS)
 
 #if !defined (NEXT_LITTLE_ENDIAN ) && !defined( NEXT_BIG_ENDIAN )
 
@@ -203,6 +219,14 @@
   #endif
 
 #endif
+
+#if !defined(NEXT_BIG_ENDIAN)
+#define NEXT_BIG_ENDIAN 0
+#endif // #if !defined(NEXT_BIG_ENDIAN)
+
+#if !defined(NEXT_LITTLE_ENDIAN)
+#define NEXT_LITTLE_ENDIAN 0
+#endif // #if !defined(NEXT_LITTLE_ENDIAN)
 
 #if defined( _MSC_VER ) && _MSC_VER < 1700
 typedef __int32 int32_t;

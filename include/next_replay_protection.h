@@ -64,13 +64,13 @@ inline void next_replay_protection_reset( next_replay_protection_t * replay_prot
     next_replay_protection_verify_sentinels( replay_protection );
 }
 
-inline int next_replay_protection_already_received( next_replay_protection_t * replay_protection, uint64_t sequence )
+inline bool next_replay_protection_already_received( next_replay_protection_t * replay_protection, uint64_t sequence )
 {
     next_replay_protection_verify_sentinels( replay_protection );
 
     if ( sequence + NEXT_REPLAY_PROTECTION_BUFFER_SIZE <= replay_protection->most_recent_sequence )
     {
-        return 1;
+        return true;
     }
 
     int index = (int) ( sequence % NEXT_REPLAY_PROTECTION_BUFFER_SIZE );
@@ -78,15 +78,15 @@ inline int next_replay_protection_already_received( next_replay_protection_t * r
     if ( replay_protection->received_packet[index] == 0xFFFFFFFFFFFFFFFFLL )
     {
         replay_protection->received_packet[index] = sequence;
-        return 0;
+        return false;
     }
 
     if ( replay_protection->received_packet[index] >= sequence )
     {
-        return 1;
+        return true;
     }
 
-    return 0;
+    return false;
 }
 
 inline void next_replay_protection_advance_sequence( next_replay_protection_t * replay_protection, uint64_t sequence )

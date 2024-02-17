@@ -21,6 +21,7 @@
 */
 
 #include "next_tests.h"
+#include "next.h"
 
 #if NEXT_DEVELOPMENT
 
