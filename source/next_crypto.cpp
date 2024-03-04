@@ -162,3 +162,8 @@ int next_crypto_box_open_easy( unsigned char * m, const unsigned char * c, unsig
 {
     return crypto_box_open_easy( m, c, clen, n, pk, sk );
 }
+
+int next_crypto_hash_sha256( unsigned char * hash, const unsigned char * data, size_t data_bytes )
+{
+    return crypto_hash_sha256( hash, data, data_bytes );
+}

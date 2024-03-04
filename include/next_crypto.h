@@ -107,4 +107,6 @@ int next_crypto_box_easy( unsigned char * c, const unsigned char * m, unsigned l
 
 int next_crypto_box_open_easy( unsigned char * m, const unsigned char * c, unsigned long long clen, const unsigned char * n, const unsigned char * pk, const unsigned char * sk );
 
+int next_crypto_hash_sha256( unsigned char * hash, const unsigned char * data, size_t data_bytes );
+
 #endif // #ifndef NEXT_CRYPTO_H

@@ -24,6 +24,7 @@ solution "next"
 
 project "next"
 	kind "StaticLib"
+-- todo: sodium needs updating to support sha256
 	links { "sodium" }
 	files {
 		"include/next.h",
@@ -31,43 +32,43 @@ project "next"
 		"source/next.cpp",
 		"source/next_*.cpp",
 	}
-	includedirs { "include", "sodium" }
+	includedirs { "include" } --, "sodium" }
 	filter "system:windows"
 		linkoptions { "/ignore:4221" }
 		disablewarnings { "4324" }
 	filter "system:macosx"
 		linkoptions { "-framework SystemConfiguration -framework CoreFoundation" }
 
-project "sodium"
-	kind "StaticLib"
-	includedirs { "sodium" }
-	files {
-		"sodium/**.c",
-		"sodium/**.h",
-	}
-  	filter { "system:not windows", "platforms:*x64 or *avx or *avx2" }
-		files {
-			"sodium/**.S"
-		}
-	filter "platforms:*x86"
-		architecture "x86"
-		defines { "NEXT_X86=1", "NEXT_CRYPTO_LOGS=1" }
-	filter "platforms:*x64"
-		architecture "x86_64"
-		defines { "NEXT_X64=1", "NEXT_CRYPTO_LOGS=1" }
-	filter "platforms:*avx"
-		architecture "x86_64"
-		vectorextensions "AVX"
-		defines { "NEXT_X64=1", "NEXT_AVX=1", "NEXT_CRYPTO_LOGS=1" }
-	filter "platforms:*avx2"
-		architecture "x86_64"
-		vectorextensions "AVX2"
-		defines { "NEXT_X64=1", "NEXT_AVX=1", "NEXT_AVX2=1", "NEXT_CRYPTO_LOGS=1" }
-	filter "system:windows"
-		disablewarnings { "4221", "4244", "4715", "4197", "4146", "4324", "4456", "4100", "4459", "4245" }
-		linkoptions { "/ignore:4221" }
-	filter { "action:gmake" }
-  		buildoptions { "-Wno-unused-parameter", "-Wno-unused-function", "-Wno-unknown-pragmas", "-Wno-unused-variable", "-Wno-type-limits" }
+--project "sodium"
+--	kind "StaticLib"
+--	includedirs { "sodium" }
+--	files {
+--		"sodium/**.c",
+--		"sodium/**.h",
+--	}
+--  	filter { "system:not windows", "platforms:*x64 or *avx or *avx2" }
+--		files {
+--			"sodium/**.S"
+--		}
+--	filter "platforms:*x86"
+--		architecture "x86"
+--		defines { "NEXT_X86=1", "NEXT_CRYPTO_LOGS=1" }
+--	filter "platforms:*x64"
+--		architecture "x86_64"
+--		defines { "NEXT_X64=1", "NEXT_CRYPTO_LOGS=1" }
+--	filter "platforms:*avx"
+--		architecture "x86_64"
+--		vectorextensions "AVX"
+--		defines { "NEXT_X64=1", "NEXT_AVX=1", "NEXT_CRYPTO_LOGS=1" }
+--	filter "platforms:*avx2"
+--		architecture "x86_64"
+--		vectorextensions "AVX2"
+--		defines { "NEXT_X64=1", "NEXT_AVX=1", "NEXT_AVX2=1", "NEXT_CRYPTO_LOGS=1" }
+--	filter "system:windows"
+--		disablewarnings { "4221", "4244", "4715", "4197", "4146", "4324", "4456", "4100", "4459", "4245" }
+--		linkoptions { "/ignore:4221" }
+--	filter { "action:gmake" }
+  --	buildoptions { "-Wno-unused-parameter", "-Wno-unused-function", "-Wno-unknown-pragmas", "-Wno-unused-variable", "-Wno-type-limits" }
 
 project "test"
 	kind "ConsoleApp"

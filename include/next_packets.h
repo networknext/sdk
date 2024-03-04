@@ -253,16 +253,6 @@ struct NextRouteUpdatePacket
     uint8_t current_magic[8];
     uint8_t previous_magic[8];
 
-    // todo: near relays need to go into another packet
-    /*
-    uint64_t near_relay_expire_timestamp;
-    bool has_near_relays;
-    int num_near_relays;
-    uint64_t near_relay_ids[NEXT_MAX_NEAR_RELAYS];
-    next_address_t near_relay_addresses[NEXT_MAX_NEAR_RELAYS];
-    uint8_t near_relay_ping_tokens[NEXT_MAX_NEAR_RELAYS*NEXT_PING_TOKEN_BYTES];
-    */
-
     NextRouteUpdatePacket()
     {
         memset( this, 0, sizeof(NextRouteUpdatePacket ) );
@@ -271,22 +261,6 @@ struct NextRouteUpdatePacket
     template <typename Stream> bool Serialize( Stream & stream )
     {
         serialize_uint64( stream, sequence );
-
-        // todo: near relays need to go into another packet
-        /*
-        serialize_bool( stream, has_near_relays );
-        if ( has_near_relays )
-        {
-            serialize_int( stream, num_near_relays, 0, NEXT_MAX_NEAR_RELAYS );
-            for ( int i = 0; i < num_near_relays; ++i )
-            {
-                serialize_uint64( stream, near_relay_ids[i] );
-                serialize_address( stream, near_relay_addresses[i] );
-                serialize_bytes( stream, near_relay_ping_tokens + i * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES );
-            }
-            serialize_uint64( stream, near_relay_expire_timestamp );
-        }
-        */
 
         serialize_int( stream, update_type, 0, NEXT_UPDATE_TYPE_CONTINUE );
 
@@ -660,16 +634,6 @@ struct NextBackendSessionUpdateResponsePacket
     uint8_t session_data_signature[NEXT_CRYPTO_SIGN_BYTES];
     uint8_t response_type;
 
-    // todo: near relays must move into another packet
-    /*
-    bool has_near_relays;
-    int num_near_relays;
-    uint64_t near_relay_ids[NEXT_MAX_NEAR_RELAYS];
-    next_address_t near_relay_addresses[NEXT_MAX_NEAR_RELAYS];
-    uint8_t near_relay_ping_tokens[NEXT_MAX_NEAR_RELAYS*NEXT_PING_TOKEN_BYTES];
-    uint64_t near_relay_expire_timestamp;
-    */
-
     int num_tokens;
     uint8_t tokens[NEXT_MAX_TOKENS*NEXT_ENCRYPTED_ROUTE_TOKEN_BYTES];
     bool multipath;
@@ -693,22 +657,6 @@ struct NextBackendSessionUpdateResponsePacket
         }
 
         serialize_int( stream, response_type, 0, NEXT_UPDATE_TYPE_CONTINUE );
-
-        // todo: move into another packet type
-        /*
-        serialize_bool( stream, has_near_relays );
-        if ( has_near_relays )
-        {
-            serialize_int( stream, num_near_relays, 0, NEXT_MAX_NEAR_RELAYS );
-            for ( int i = 0; i < num_near_relays; ++i )
-            {
-                serialize_uint64( stream, near_relay_ids[i] );
-                serialize_address( stream, near_relay_addresses[i] );
-                serialize_bytes( stream, near_relay_ping_tokens + i * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES );
-            }
-            serialize_uint64( stream, near_relay_expire_timestamp );
-        }
-        */
 
         if ( response_type != NEXT_UPDATE_TYPE_DIRECT )
         {

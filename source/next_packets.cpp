@@ -641,7 +641,7 @@ int next_write_backend_packet( uint8_t packet_id, void * packet_object, uint8_t 
     serialize_bits( stream, packet_id, 8 );
 
     uint8_t dummy = 0;
-    for ( int i = 0; i < 15; ++i )
+    for ( int i = 0; i < 17; ++i )
     {
         serialize_bits( stream, dummy, 8 );
     }
@@ -713,29 +713,26 @@ int next_write_backend_packet( uint8_t packet_id, void * packet_object, uint8_t 
         next_crypto_sign_state_t state;
         next_crypto_sign_init( &state );
         next_crypto_sign_update( &state, packet_data, 1 );
-        next_crypto_sign_update( &state, packet_data + 16, size_t(*packet_bytes) - 16 );
+        next_crypto_sign_update( &state, packet_data + 18, size_t(*packet_bytes) - 18 );
         next_crypto_sign_final_create( &state, packet_data + *packet_bytes, NULL, sign_private_key );
         *packet_bytes += NEXT_CRYPTO_SIGN_BYTES;
     }
 
-    *packet_bytes += 2;
-
-    next_generate_chonkle( packet_data + 1, magic, from_address, to_address, *packet_bytes );
-    next_generate_pittle( packet_data + *packet_bytes - 2, from_address, to_address, *packet_bytes );
+    next_generate_pittle( packet_data + 1, from_address, to_address, *packet_bytes );
+    next_generate_chonkle( packet_data + 3, magic, from_address, to_address, *packet_bytes );
 
     return NEXT_OK;
 }
 
 int next_read_backend_packet( uint8_t packet_id, uint8_t * packet_data, int begin, int end, void * packet_object, const int * signed_packet, const uint8_t * sign_public_key )
 {
-    // todo: header
-
     next_assert( packet_data );
     next_assert( packet_object );
 
     next::ReadStream stream( packet_data, end );
 
     uint8_t * dummy = (uint8_t*) alloca( begin );
+
     serialize_bytes( stream, dummy, begin );
 
     if ( signed_packet && signed_packet[packet_id] )
