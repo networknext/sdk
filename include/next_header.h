@@ -27,6 +27,9 @@
 #include "next_crypto.h"
 #include "next_read_write.h"
 
+// todo
+#include <stdio.h>
+
 inline int next_write_header( uint8_t type, uint64_t sequence, uint64_t session_id, uint8_t session_version, const uint8_t * private_key, uint8_t * buffer )
 {
     next_assert( private_key );
@@ -91,6 +94,8 @@ inline int next_read_header( int packet_type, uint64_t * sequence, uint64_t * se
 
     if ( buffer_length < NEXT_HEADER_BYTES )
     {
+        // todo
+        printf( "too small for header: %d\n", buffer_length );
         return NEXT_ERROR;
     }
 
@@ -104,6 +109,8 @@ inline int next_read_header( int packet_type, uint64_t * sequence, uint64_t * se
 
     uint64_t packet_session_id = next_read_uint64( &p );
     uint8_t packet_session_version = next_read_uint8( &p );
+
+    // todo: redo this crypto
 
     uint8_t nonce[12];
     {
@@ -121,6 +128,8 @@ inline int next_read_header( int packet_type, uint64_t * sequence, uint64_t * se
 
     if ( result != 0 )
     {
+        // todo
+        printf( "decrypt failed\n" );
         return NEXT_ERROR;
     }
 

@@ -2489,7 +2489,10 @@ void test_direct_packet()
 
         uint8_t game_packet_data[NEXT_MTU];
         int game_packet_bytes = rand() % NEXT_MTU;
-        for ( int j = 0; j < game_packet_bytes; j++ ) { game_packet_data[j] = uint8_t( rand() % 256 ); }
+        for ( int j = 0; j < game_packet_bytes; j++ ) 
+        { 
+            game_packet_data[j] = uint8_t( rand() % 256 ); 
+        }
 
         int packet_bytes = next_write_direct_packet( packet_data, open_session_sequence, send_sequence, game_packet_data, game_packet_bytes, magic, from_address, to_address );
 
@@ -2500,11 +2503,9 @@ void test_direct_packet()
         next_check( next_advanced_packet_filter( packet_data, magic, from_address, to_address, packet_bytes ) );
 
         next_check( packet_data[0] == NEXT_DIRECT_PACKET );
-        next_check( memcmp( packet_data + 25, game_packet_data, game_packet_bytes ) == 0 );
+        next_check( memcmp( packet_data + 18 + 1 + 8, game_packet_data, game_packet_bytes ) == 0 );
     }
 }
-
-#if 0
 
 // ---------------------------------------------------------------
 
@@ -2543,7 +2544,7 @@ void test_direct_ping_packet()
         int result = next_write_packet( NEXT_DIRECT_PING_PACKET, &in, packet_data, &packet_bytes, next_signed_packets, next_encrypted_packets, &in_sequence, NULL, private_key, magic, from_address, to_address );
 
         next_check( result == NEXT_OK );
-        next_check( packet_bytes == 1 + 15 + 8 + 8 + NEXT_CRYPTO_AEAD_CHACHA20POLY1305_ABYTES + 2 );
+        next_check( packet_bytes == 18 + 8 + 8 + NEXT_CRYPTO_AEAD_CHACHA20POLY1305_ABYTES );    // todo: crypto update
 
         next_check( next_basic_packet_filter( packet_data, packet_bytes ) );
         next_check( next_advanced_packet_filter( packet_data, magic, from_address, to_address, packet_bytes ) );
@@ -2589,7 +2590,7 @@ void test_direct_pong_packet()
         int result = next_write_packet( NEXT_DIRECT_PONG_PACKET, &in, packet_data, &packet_bytes, next_signed_packets, next_encrypted_packets, &in_sequence, NULL, private_key, magic, from_address, to_address );
 
         next_check( result == NEXT_OK );
-        next_check( packet_bytes == 1 + 15 + 8 + 8 + NEXT_CRYPTO_AEAD_CHACHA20POLY1305_ABYTES + 2 );
+        next_check( packet_bytes == 18 + 8 + 8 + NEXT_CRYPTO_AEAD_CHACHA20POLY1305_ABYTES );    // todo: crypto update
 
         next_check( next_basic_packet_filter( packet_data, packet_bytes ) );
         next_check( next_advanced_packet_filter( packet_data, magic, from_address, to_address, packet_bytes ) );
@@ -2779,7 +2780,7 @@ void test_route_request_packet()
         next_check( next_advanced_packet_filter( packet_data, magic, from_address, to_address, packet_bytes ) );
 
         next_check( packet_data[0] == NEXT_ROUTE_REQUEST_PACKET );
-        next_check( memcmp( packet_data + 16, token_data, token_bytes ) == 0 );
+        next_check( memcmp( packet_data + 18, token_data, token_bytes ) == 0 );
     }
 }
 
@@ -2815,8 +2816,8 @@ void test_route_response_packet()
         uint64_t read_packet_session_id = 0;
         uint8_t read_packet_session_version = 0;
 
-        uint8_t * read_packet_data = packet_data + 16;
-        int read_packet_bytes = packet_bytes - 16;
+        uint8_t * read_packet_data = packet_data + 18;
+        int read_packet_bytes = packet_bytes - 18;
 
         next_check( next_read_header( NEXT_ROUTE_RESPONSE_PACKET, &read_packet_sequence, &read_packet_session_id, &read_packet_session_version, private_key, read_packet_data, read_packet_bytes ) == NEXT_OK );
 
@@ -2856,14 +2857,14 @@ void test_client_to_server_packet()
 
         next_check( packet_data[0] == NEXT_CLIENT_TO_SERVER_PACKET );
 
-        next_check( memcmp( packet_data + 1 + 15 + NEXT_HEADER_BYTES, game_packet_data, game_packet_bytes ) == 0 );
+        next_check( memcmp( packet_data + 18 + NEXT_HEADER_BYTES, game_packet_data, game_packet_bytes ) == 0 );
 
         uint64_t read_packet_sequence = 0;
         uint64_t read_packet_session_id = 0;
         uint8_t read_packet_session_version = 0;
 
-        uint8_t * read_packet_data = packet_data + 16;
-        int read_packet_bytes = packet_bytes - 16;
+        uint8_t * read_packet_data = packet_data + 18;
+        int read_packet_bytes = packet_bytes - 18;
 
         next_check( next_read_header( NEXT_CLIENT_TO_SERVER_PACKET, &read_packet_sequence, &read_packet_session_id, &read_packet_session_version, private_key, read_packet_data, read_packet_bytes ) == NEXT_OK );
 
@@ -2905,14 +2906,14 @@ void test_server_to_client_packet()
 
         next_check( packet_data[0] == NEXT_SERVER_TO_CLIENT_PACKET );
 
-        next_check( memcmp( packet_data + 1 + 15 + NEXT_HEADER_BYTES, game_packet_data, game_packet_bytes ) == 0 );
+        next_check( memcmp( packet_data + 18 + NEXT_HEADER_BYTES, game_packet_data, game_packet_bytes ) == 0 );
 
         uint64_t read_packet_sequence = 0;
         uint64_t read_packet_session_id = 0;
         uint8_t read_packet_session_version = 0;
 
-        uint8_t * read_packet_data = packet_data + 16;
-        int read_packet_bytes = packet_bytes - 16;
+        uint8_t * read_packet_data = packet_data + 18;
+        int read_packet_bytes = packet_bytes - 18;
 
         next_check( next_read_header( NEXT_SERVER_TO_CLIENT_PACKET, &read_packet_sequence, &read_packet_session_id, &read_packet_session_version, private_key, read_packet_data, read_packet_bytes ) == NEXT_OK );
 
@@ -2921,6 +2922,8 @@ void test_server_to_client_packet()
         next_check( read_packet_session_version == session_version );
     }
 }
+
+#if 0
 
 void test_session_ping_packet()
 {
@@ -4631,8 +4634,6 @@ void next_run_tests()
         RUN_TEST( test_session_manager );
         RUN_TEST( test_relay_manager );
         RUN_TEST( test_direct_packet );
-
-#if 0
         RUN_TEST( test_direct_ping_packet );
         RUN_TEST( test_direct_pong_packet );
         RUN_TEST( test_upgrade_request_packet );
@@ -4642,6 +4643,7 @@ void next_run_tests()
         RUN_TEST( test_route_response_packet );
         RUN_TEST( test_client_to_server_packet );
         RUN_TEST( test_server_to_client_packet );
+#if 0
         RUN_TEST( test_session_ping_packet );
         RUN_TEST( test_session_pong_packet );
         RUN_TEST( test_continue_request_packet );
