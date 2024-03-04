@@ -827,21 +827,24 @@ int next_server_internal_send_packet( next_server_internal_t * server, const nex
         send_key = session->send_key;
     }
 
-    uint8_t from_address_data[32];
-    uint8_t to_address_data[32];
-    int from_address_bytes = 0;
-    int to_address_bytes = 0;
+    uint8_t from_address_data[4];
+    uint8_t to_address_data[4];
 
-    next_address_data( &server->server_address, from_address_data, &from_address_bytes );
+    next_address_data( &server->server_address, from_address_data );
 
     // IMPORTANT: when the upgrade request packet is sent, the client doesn't know it's external address yet
-    // so we must encode with a to address of zero bytes for the upgrade request packet
+    // so we must encode with a to address of [0,0,0,0]
     if ( packet_id != NEXT_UPGRADE_REQUEST_PACKET )
     {
-        next_address_data( to_address, to_address_data, &to_address_bytes );
+        next_address_data( to_address, to_address_data );
+    }
+    else
+    {
+        // todo: the backend needs to be updated to support this
+        memset( to_address_data, 0, sizeof(to_address_data) );
     }
 
-    if ( next_write_packet( packet_id, packet_object, buffer, &packet_bytes, next_signed_packets, next_encrypted_packets, sequence, server->buyer_private_key, send_key, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes ) != NEXT_OK )
+    if ( next_write_packet( packet_id, packet_object, buffer, &packet_bytes, next_signed_packets, next_encrypted_packets, sequence, server->buyer_private_key, send_key, magic, from_address_data, to_address_data ) != NEXT_OK )
     {
         next_printf( NEXT_LOG_LEVEL_ERROR, "server failed to write internal packet with id %d", packet_id );
         return NEXT_ERROR;
@@ -849,7 +852,7 @@ int next_server_internal_send_packet( next_server_internal_t * server, const nex
 
     next_assert( packet_bytes > 0 );
     next_assert( next_basic_packet_filter( buffer, packet_bytes ) );
-    next_assert( next_advanced_packet_filter( buffer, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, packet_bytes ) );
+    next_assert( next_advanced_packet_filter( buffer, magic, from_address_data, to_address_data, packet_bytes ) );
 
     next_server_internal_send_packet_to_address( server, to_address, buffer, packet_bytes );
 
@@ -1240,13 +1243,11 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
             return;
         }
 
-        uint8_t from_address_data[32];
-        uint8_t to_address_data[32];
-        int from_address_bytes;
-        int to_address_bytes;
+        uint8_t from_address_data[4];
+        uint8_t to_address_data[4];
 
-        next_address_data( from, from_address_data, &from_address_bytes );
-        next_address_data( &server->server_address, to_address_data, &to_address_bytes );
+        next_address_data( from, from_address_data );
+        next_address_data( &server->server_address, to_address_data );
 
         if ( packet_id != NEXT_BACKEND_SERVER_INIT_REQUEST_PACKET &&
              packet_id != NEXT_BACKEND_SERVER_INIT_RESPONSE_PACKET &&
@@ -1254,11 +1255,11 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
              packet_id != NEXT_BACKEND_SERVER_UPDATE_RESPONSE_PACKET &&
              packet_id != NEXT_BACKEND_SESSION_UPDATE_RESPONSE_PACKET )
         {
-            if ( !next_advanced_packet_filter( packet_data + begin, server->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, end - begin ) )
+            if ( !next_advanced_packet_filter( packet_data + begin, server->current_magic, from_address_data, to_address_data, end - begin ) )
             {
-                if ( !next_advanced_packet_filter( packet_data + begin, server->upcoming_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, end - begin ) )
+                if ( !next_advanced_packet_filter( packet_data + begin, server->upcoming_magic, from_address_data, to_address_data, end - begin ) )
                 {
-                    if ( !next_advanced_packet_filter( packet_data + begin, server->previous_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, end - begin ) )
+                    if ( !next_advanced_packet_filter( packet_data + begin, server->previous_magic, from_address_data, to_address_data, end - begin ) )
                     {
                         next_printf( NEXT_LOG_LEVEL_DEBUG, "server advanced packet filter dropped packet" );
                         return;
@@ -1270,7 +1271,7 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
         {
             uint8_t magic[8];
             memset( magic, 0, sizeof(magic) );
-            if ( !next_advanced_packet_filter( packet_data + begin, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, end - begin ) )
+            if ( !next_advanced_packet_filter( packet_data + begin, magic, from_address_data, to_address_data, end - begin ) )
             {
                 next_printf( NEXT_LOG_LEVEL_DEBUG, "server advanced packet filter dropped packet (backend)" );
                 return;
@@ -1923,20 +1924,18 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
 
         uint8_t from_address_data[4];
         uint8_t to_address_data[4];
-        int from_address_bytes;
-        int to_address_bytes;
 
-        next_address_data( &server->server_address, from_address_data, &from_address_bytes );
-        next_address_data( from, to_address_data, &to_address_bytes );
+        next_address_data( &server->server_address, from_address_data );
+        next_address_data( from, to_address_data );
 
         uint8_t response_data[NEXT_MAX_PACKET_BYTES];
 
-        int response_bytes = next_write_route_response_packet( response_data, session_send_sequence, entry->session_id, entry->pending_route_session_version, entry->pending_route_private_key, server->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes );
+        int response_bytes = next_write_route_response_packet( response_data, session_send_sequence, entry->session_id, entry->pending_route_session_version, entry->pending_route_private_key, server->current_magic, from_address_data, to_address_data );
 
         next_assert( response_bytes > 0 );
 
         next_assert( next_basic_packet_filter( response_data, response_bytes ) );
-        next_assert( next_advanced_packet_filter( response_data, server->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, response_bytes ) );
+        next_assert( next_advanced_packet_filter( response_data, server->current_magic, from_address_data, to_address_data, response_bytes ) );
 
         next_server_internal_send_packet_to_address( server, from, response_data, response_bytes );
 
@@ -2002,20 +2001,18 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
 
         uint8_t from_address_data[4];
         uint8_t to_address_data[4];
-        int from_address_bytes;
-        int to_address_bytes;
 
-        next_address_data( &server->server_address, from_address_data, &from_address_bytes );
-        next_address_data( from, to_address_data, &to_address_bytes );
+        next_address_data( &server->server_address, from_address_data );
+        next_address_data( from, to_address_data );
 
         uint8_t response_data[NEXT_MAX_PACKET_BYTES];
 
-        int response_bytes = next_write_continue_response_packet( response_data, session_send_sequence, entry->session_id, entry->current_route_session_version, entry->current_route_private_key, server->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes );
+        int response_bytes = next_write_continue_response_packet( response_data, session_send_sequence, entry->session_id, entry->current_route_session_version, entry->current_route_private_key, server->current_magic, from_address_data, to_address_data );
 
         next_assert( response_bytes > 0 );
 
         next_assert( next_basic_packet_filter( response_data, response_bytes ) );
-        next_assert( next_advanced_packet_filter( response_data, server->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, response_bytes ) );
+        next_assert( next_advanced_packet_filter( response_data, server->current_magic, from_address_data, to_address_data, response_bytes ) );
 
         next_server_internal_send_packet_to_address( server, from, response_data, response_bytes );
 
@@ -2097,20 +2094,18 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
 
         uint8_t from_address_data[4];
         uint8_t to_address_data[4];
-        int from_address_bytes;
-        int to_address_bytes;
 
-        next_address_data( &server->server_address, from_address_data, &from_address_bytes );
-        next_address_data( from, to_address_data, &to_address_bytes );
+        next_address_data( &server->server_address, from_address_data );
+        next_address_data( from, to_address_data );
 
         uint8_t pong_packet_data[NEXT_MAX_PACKET_BYTES];
 
-        int pong_packet_bytes = next_write_session_pong_packet( pong_packet_data, send_sequence, entry->session_id, entry->current_route_session_version, entry->current_route_private_key, ping_sequence, server->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes );
+        int pong_packet_bytes = next_write_session_pong_packet( pong_packet_data, send_sequence, entry->session_id, entry->current_route_session_version, entry->current_route_private_key, ping_sequence, server->current_magic, from_address_data, to_address_data );
 
         next_assert( pong_packet_bytes > 0 );
 
         next_assert( next_basic_packet_filter( pong_packet_data, pong_packet_bytes ) );
-        next_assert( next_advanced_packet_filter( pong_packet_data, server->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, pong_packet_bytes ) );
+        next_assert( next_advanced_packet_filter( pong_packet_data, server->current_magic, from_address_data, to_address_data, pong_packet_bytes ) );
 
         next_server_internal_send_packet_to_address( server, from, pong_packet_data, pong_packet_bytes );
 
@@ -3009,27 +3004,25 @@ void next_server_internal_update_init( next_server_internal_t * server )
     uint8_t magic[8];
     memset( magic, 0, sizeof(magic) );
 
-    uint8_t from_address_data[32];
-    uint8_t to_address_data[32];
-    int from_address_bytes;
-    int to_address_bytes;
+    uint8_t from_address_data[4];
+    uint8_t to_address_data[4];
 
-    next_address_data( &server->server_address, from_address_data, &from_address_bytes );
-    next_address_data( &server->backend_address, to_address_data, &to_address_bytes );
+    next_address_data( &server->server_address, from_address_data );
+    next_address_data( &server->backend_address, to_address_data );
 
     uint8_t packet_data[NEXT_MAX_PACKET_BYTES];
 
     next_assert( ( size_t(packet_data) % 4 ) == 0 );
 
     int packet_bytes = 0;
-    if ( next_write_backend_packet( NEXT_BACKEND_SERVER_INIT_REQUEST_PACKET, &packet, packet_data, &packet_bytes, next_signed_packets, server->buyer_private_key, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes ) != NEXT_OK )
+    if ( next_write_backend_packet( NEXT_BACKEND_SERVER_INIT_REQUEST_PACKET, &packet, packet_data, &packet_bytes, next_signed_packets, server->buyer_private_key, magic, from_address_data, to_address_data ) != NEXT_OK )
     {
         next_printf( NEXT_LOG_LEVEL_ERROR, "server failed to write server init request packet for backend" );
         return;
     }
 
     next_assert( next_basic_packet_filter( packet_data, packet_bytes ) );
-    next_assert( next_advanced_packet_filter( packet_data, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, packet_bytes ) );
+    next_assert( next_advanced_packet_filter( packet_data, magic, from_address_data, to_address_data, packet_bytes ) );
 
     next_server_internal_send_packet_to_backend( server, packet_data, packet_bytes );
 
@@ -3122,27 +3115,25 @@ void next_server_internal_backend_update( next_server_internal_t * server )
         uint8_t magic[8];
         memset( magic, 0, sizeof(magic) );
 
-        uint8_t from_address_data[32];
-        uint8_t to_address_data[32];
-        int from_address_bytes;
-        int to_address_bytes;
+        uint8_t from_address_data[4];
+        uint8_t to_address_data[4];
 
-        next_address_data( &server->server_address, from_address_data, &from_address_bytes );
-        next_address_data( &server->backend_address, to_address_data, &to_address_bytes );
+        next_address_data( &server->server_address, from_address_data );
+        next_address_data( &server->backend_address, to_address_data );
 
         uint8_t packet_data[NEXT_MAX_PACKET_BYTES];
 
         next_assert( ( size_t(packet_data) % 4 ) == 0 );
 
         int packet_bytes = 0;
-        if ( next_write_backend_packet( NEXT_BACKEND_SERVER_UPDATE_REQUEST_PACKET, &packet, packet_data, &packet_bytes, next_signed_packets, server->buyer_private_key, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes ) != NEXT_OK )
+        if ( next_write_backend_packet( NEXT_BACKEND_SERVER_UPDATE_REQUEST_PACKET, &packet, packet_data, &packet_bytes, next_signed_packets, server->buyer_private_key, magic, from_address_data, to_address_data ) != NEXT_OK )
         {
             next_printf( NEXT_LOG_LEVEL_ERROR, "server failed to write server update request packet for backend" );
             return;
         }
 
         next_assert( next_basic_packet_filter( packet_data, packet_bytes ) );
-        next_assert( next_advanced_packet_filter( packet_data, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, packet_bytes ) );
+        next_assert( next_advanced_packet_filter( packet_data, magic, from_address_data, to_address_data, packet_bytes ) );
 
         next_server_internal_send_packet_to_backend( server, packet_data, packet_bytes );
 
@@ -3171,27 +3162,25 @@ void next_server_internal_backend_update( next_server_internal_t * server )
         uint8_t magic[8];
         memset( magic, 0, sizeof(magic) );
 
-        uint8_t from_address_data[32];
-        uint8_t to_address_data[32];
-        int from_address_bytes;
-        int to_address_bytes;
+        uint8_t from_address_data[4];
+        uint8_t to_address_data[4];
 
-        next_address_data( &server->server_address, from_address_data, &from_address_bytes );
-        next_address_data( &server->backend_address, to_address_data, &to_address_bytes );
+        next_address_data( &server->server_address, from_address_data );
+        next_address_data( &server->backend_address, to_address_data );
 
         uint8_t packet_data[NEXT_MAX_PACKET_BYTES];
 
         next_assert( ( size_t(packet_data) % 4 ) == 0 );
 
         int packet_bytes = 0;
-        if ( next_write_backend_packet( NEXT_BACKEND_SERVER_UPDATE_REQUEST_PACKET, &packet, packet_data, &packet_bytes, next_signed_packets, server->buyer_private_key, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes ) != NEXT_OK )
+        if ( next_write_backend_packet( NEXT_BACKEND_SERVER_UPDATE_REQUEST_PACKET, &packet, packet_data, &packet_bytes, next_signed_packets, server->buyer_private_key, magic, from_address_data, to_address_data ) != NEXT_OK )
         {
             next_printf( NEXT_LOG_LEVEL_ERROR, "server failed to write server update packet for backend" );
             return;
         }
 
         next_assert( next_basic_packet_filter( packet_data, packet_bytes ) );
-        next_assert( next_advanced_packet_filter( packet_data, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, packet_bytes ) );
+        next_assert( next_advanced_packet_filter( packet_data, magic, from_address_data, to_address_data, packet_bytes ) );
 
         next_server_internal_send_packet_to_backend( server, packet_data, packet_bytes );
 
@@ -3311,27 +3300,25 @@ void next_server_internal_backend_update( next_server_internal_t * server )
             uint8_t magic[8];
             memset( magic, 0, sizeof(magic) );
 
-            uint8_t from_address_data[32];
-            uint8_t to_address_data[32];
-            int from_address_bytes;
-            int to_address_bytes;
+            uint8_t from_address_data[4];
+            uint8_t to_address_data[4];
 
-            next_address_data( &server->server_address, from_address_data, &from_address_bytes );
-            next_address_data( &server->backend_address, to_address_data, &to_address_bytes );
+            next_address_data( &server->server_address, from_address_data );
+            next_address_data( &server->backend_address, to_address_data );
 
             uint8_t packet_data[NEXT_MAX_PACKET_BYTES];
 
             next_assert( ( size_t(packet_data) % 4 ) == 0 );
 
             int packet_bytes = 0;
-            if ( next_write_backend_packet( NEXT_BACKEND_SESSION_UPDATE_REQUEST_PACKET, &packet, packet_data, &packet_bytes, next_signed_packets, server->buyer_private_key, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes ) != NEXT_OK )
+            if ( next_write_backend_packet( NEXT_BACKEND_SESSION_UPDATE_REQUEST_PACKET, &packet, packet_data, &packet_bytes, next_signed_packets, server->buyer_private_key, magic, from_address_data, to_address_data ) != NEXT_OK )
             {
                 next_printf( NEXT_LOG_LEVEL_ERROR, "server failed to write server init request packet for backend" );
                 return;
             }
 
             next_assert( next_basic_packet_filter( packet_data, packet_bytes ) );
-            next_assert( next_advanced_packet_filter( packet_data, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, packet_bytes ) );
+            next_assert( next_advanced_packet_filter( packet_data, magic, from_address_data, to_address_data, packet_bytes ) );
 
             next_server_internal_send_packet_to_backend( server, packet_data, packet_bytes );
 
@@ -3372,27 +3359,25 @@ void next_server_internal_backend_update( next_server_internal_t * server )
             uint8_t magic[8];
             memset( magic, 0, sizeof(magic) );
 
-            uint8_t from_address_data[32];
-            uint8_t to_address_data[32];
-            int from_address_bytes;
-            int to_address_bytes;
+            uint8_t from_address_data[4];
+            uint8_t to_address_data[4];
 
-            next_address_data( &server->server_address, from_address_data, &from_address_bytes );
-            next_address_data( &server->backend_address, to_address_data, &to_address_bytes );
+            next_address_data( &server->server_address, from_address_data );
+            next_address_data( &server->backend_address, to_address_data );
 
             uint8_t packet_data[NEXT_MAX_PACKET_BYTES];
 
             next_assert( ( size_t(packet_data) % 4 ) == 0 );
 
             int packet_bytes = 0;
-            if ( next_write_backend_packet( NEXT_BACKEND_SESSION_UPDATE_REQUEST_PACKET, &session->session_update_request_packet, packet_data, &packet_bytes, next_signed_packets, server->buyer_private_key, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes ) != NEXT_OK )
+            if ( next_write_backend_packet( NEXT_BACKEND_SESSION_UPDATE_REQUEST_PACKET, &session->session_update_request_packet, packet_data, &packet_bytes, next_signed_packets, server->buyer_private_key, magic, from_address_data, to_address_data ) != NEXT_OK )
             {
                 next_printf( NEXT_LOG_LEVEL_ERROR, "server failed to write session update request packet for backend" );
                 return;
             }
 
             next_assert( next_basic_packet_filter( packet_data, packet_bytes ) );
-            next_assert( next_advanced_packet_filter( packet_data, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, packet_bytes ) );
+            next_assert( next_advanced_packet_filter( packet_data, magic, from_address_data, to_address_data, packet_bytes ) );
 
             next_server_internal_send_packet_to_backend( server, packet_data, packet_bytes );
 
@@ -3995,22 +3980,20 @@ void next_server_send_packet( next_server_t * server, const next_address_t * to_
         {
             // send over network next
 
-            uint8_t from_address_data[32];
-            uint8_t to_address_data[32];
-            int from_address_bytes;
-            int to_address_bytes;
+            uint8_t from_address_data[4];
+            uint8_t to_address_data[4];
 
-            next_address_data( &server->address, from_address_data, &from_address_bytes );
-            next_address_data( &session_address, to_address_data, &to_address_bytes );
+            next_address_data( &server->address, from_address_data );
+            next_address_data( &session_address, to_address_data );
 
             uint8_t next_packet_data[NEXT_MAX_PACKET_BYTES];
 
-            int next_packet_bytes = next_write_server_to_client_packet( next_packet_data, send_sequence, session_id, session_version, session_private_key, packet_data, packet_bytes, server->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes );
+            int next_packet_bytes = next_write_server_to_client_packet( next_packet_data, send_sequence, session_id, session_version, session_private_key, packet_data, packet_bytes, server->current_magic, from_address_data, to_address_data );
 
             next_assert( next_packet_bytes > 0 );
 
             next_assert( next_basic_packet_filter( next_packet_data, next_packet_bytes ) );
-            next_assert( next_advanced_packet_filter( next_packet_data, server->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, next_packet_bytes ) );
+            next_assert( next_advanced_packet_filter( next_packet_data, server->current_magic, from_address_data, to_address_data, next_packet_bytes ) );
 
             next_server_send_packet_to_address( server, &session_address, next_packet_data, next_packet_bytes );
         }
@@ -4019,24 +4002,22 @@ void next_server_send_packet( next_server_t * server, const next_address_t * to_
         {
             // direct packet
 
-            uint8_t from_address_data[32];
-            uint8_t to_address_data[32];
-            int from_address_bytes = 0;
-            int to_address_bytes = 0;
+            uint8_t from_address_data[4];
+            uint8_t to_address_data[4];
 
-            next_address_data( &server->address, from_address_data, &from_address_bytes );
-            next_address_data( to_address, to_address_data, &to_address_bytes );
+            next_address_data( &server->address, from_address_data );
+            next_address_data( to_address, to_address_data );
 
             uint8_t direct_packet_data[NEXT_MAX_PACKET_BYTES];
 
-            int direct_packet_bytes = next_write_direct_packet( direct_packet_data, open_session_sequence, send_sequence, packet_data, packet_bytes, server->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes );
+            int direct_packet_bytes = next_write_direct_packet( direct_packet_data, open_session_sequence, send_sequence, packet_data, packet_bytes, server->current_magic, from_address_data, to_address_data );
 
             next_assert( direct_packet_bytes >= 27 );
             next_assert( direct_packet_bytes <= NEXT_MTU + 27 );
             next_assert( direct_packet_data[0] == NEXT_DIRECT_PACKET );
 
             next_assert( next_basic_packet_filter( direct_packet_data, direct_packet_bytes ) );
-            next_assert( next_advanced_packet_filter( direct_packet_data, server->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes, direct_packet_bytes ) );
+            next_assert( next_advanced_packet_filter( direct_packet_data, server->current_magic, from_address_data, to_address_data, direct_packet_bytes ) );
 
             next_server_send_packet_to_address( server, to_address, direct_packet_data, direct_packet_bytes );
         }

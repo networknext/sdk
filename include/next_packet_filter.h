@@ -25,14 +25,14 @@
 
 #include "next.h"
 
-void next_generate_pittle( uint8_t * output, const uint8_t * from_address, int from_address_bytes, const uint8_t * to_address, int to_address_bytes, int packet_length );
+void next_generate_pittle( uint8_t * output, const uint8_t * from_address, const uint8_t * to_address, uint16_t packet_length );
 
-void next_generate_chonkle( uint8_t * output, const uint8_t * magic, const uint8_t * from_address, int from_address_bytes, const uint8_t * to_address, int to_address_bytes, int packet_length );
+void next_generate_chonkle( uint8_t * output, const uint8_t * magic, const uint8_t * from_address, const uint8_t * to_address, uint16_t packet_length );
 
-bool next_basic_packet_filter( const uint8_t * data, int packet_length );
+bool next_basic_packet_filter( const uint8_t * data, uint16_t packet_length );
 
-void next_address_data( const next_address_t * address, uint8_t * address_data, int * address_bytes );
+void next_address_data( const next_address_t * address, uint8_t * address_data );
 
-bool next_advanced_packet_filter( const uint8_t * data, const uint8_t * magic, const uint8_t * from_address, int from_address_bytes, const uint8_t * to_address, int to_address_bytes, int packet_length );
+bool next_advanced_packet_filter( const uint8_t * data, const uint8_t * magic, const uint8_t * from_address, const uint8_t * to_address, uint16_t packet_length );
 
 #endif // #ifndef NEXT_PACKET_FILTER_H

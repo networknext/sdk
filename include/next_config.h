@@ -185,7 +185,7 @@
 
 #define NEXT_IPV4_HEADER_BYTES                                         20
 #define NEXT_UDP_HEADER_BYTES                                           8
-#define NEXT_HEADER_BYTES                                              33
+#define NEXT_HEADER_BYTES                                              33        // todo: check this is correct still
 
 extern uint8_t next_server_backend_public_key[];
 
