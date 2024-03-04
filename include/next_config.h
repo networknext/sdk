@@ -141,7 +141,7 @@
 
 #define NEXT_MAX_DATACENTER_NAME_LENGTH                               256
 
-#define NEXT_MAX_SESSION_DATA_BYTES                                  1024
+#define NEXT_MAX_SESSION_DATA_BYTES                                   256  // IMPORTANT: Update this elsewhere in backend etc.
 
 #define NEXT_MAX_SESSION_UPDATE_RETRIES                                10
 

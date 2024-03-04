@@ -30,7 +30,7 @@
 #include <inttypes.h>
 
 const char * bind_address = "0.0.0.0:0";
-const char * server_address = "192.168.1.36:40000"; // todo: temporary for eBPF testing //"127.0.0.1:50000";
+const char * server_address = "127.0.0.1:50000";
 
 static volatile int quit = 0;
 

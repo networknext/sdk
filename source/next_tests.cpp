@@ -1544,7 +1544,7 @@ void test_header()
         uint64_t send_sequence = i + 1000;
         uint64_t session_id = 0x12314141LL;
         uint8_t session_version = uint8_t(i%256);
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES]; // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         next_check( next_write_header( NEXT_CLIENT_TO_SERVER_PACKET, send_sequence, session_id, session_version, private_key, packet_data ) == NEXT_OK );
@@ -1571,7 +1571,7 @@ void test_pittle()
         uint8_t to_address[4];
         next_crypto_random_bytes( from_address, 4 );
         next_crypto_random_bytes( to_address, 4 );
-        int packet_length = 1 + ( i % 1500 );
+        int packet_length = 1 + ( i % NEXT_MAX_PACKET_BYTES );
         next_generate_pittle( output, from_address, 4, to_address, 4, packet_length );
         next_check( output[0] != 0 );
         next_check( output[1] != 0 );
@@ -1580,7 +1580,7 @@ void test_pittle()
 
 void test_chonkle()
 {
-    uint8_t output[1500];
+    uint8_t output[NEXT_MAX_PACKET_BYTES];
     memset( output, 0, sizeof(output) );
     output[0] = 1;
     for ( int i = 0; i < 10000; ++i )
@@ -1645,7 +1645,7 @@ void test_abi()
 
 void test_pittle_and_chonkle()
 {
-    uint8_t output[1500];
+    uint8_t output[NEXT_MAX_PACKET_BYTES];
     memset( output, 0, sizeof(output) );
     output[0] = 1;
     for ( int i = 0; i < 10000; ++i )
@@ -2596,7 +2596,7 @@ void test_direct_ping_packet()
         next_crypto_random_bytes( from_address, 4 );
         next_crypto_random_bytes( to_address, 4 );
 
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint64_t in_sequence = i;
@@ -2642,7 +2642,7 @@ void test_direct_pong_packet()
         next_crypto_random_bytes( from_address, 4 );
         next_crypto_random_bytes( to_address, 4 );
 
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint64_t in_sequence = i;
@@ -2866,7 +2866,7 @@ void test_route_response_packet()
         uint64_t send_sequence = i + 1000;
         uint64_t session_id = 0x12314141LL;
         uint8_t session_version = uint8_t(i%256);
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         int packet_bytes = next_write_route_response_packet( packet_data, send_sequence, session_id, session_version, private_key, magic, from_address, 4, to_address, 4 );
@@ -2909,7 +2909,7 @@ void test_client_to_server_packet()
         uint64_t send_sequence = i + 1000;
         uint64_t session_id = 0x12314141LL;
         uint8_t session_version = uint8_t(i%256);
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t game_packet_data[NEXT_MTU];
@@ -2956,7 +2956,7 @@ void test_server_to_client_packet()
         uint64_t send_sequence = i + 1000;
         uint64_t session_id = 0x12314141LL;
         uint8_t session_version = uint8_t(i%256);
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t game_packet_data[NEXT_MTU];
@@ -3049,7 +3049,7 @@ void test_session_pong_packet()
         uint64_t send_sequence = i + 1000;
         uint64_t session_id = 0x12314141LL;
         uint8_t session_version = uint8_t(i%256);
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
 
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
@@ -3118,7 +3118,7 @@ void test_continue_response_packet()
         uint64_t send_sequence = i + 1000;
         uint64_t session_id = 0x12314141LL;
         uint8_t session_version = uint8_t(i%256);
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         int packet_bytes = next_write_continue_response_packet( packet_data, send_sequence, session_id, session_version, private_key, magic, from_address, 4, to_address, 4 );
@@ -3151,7 +3151,7 @@ void test_client_stats_packet_with_near_relays()
     uint64_t iterations = 100;
     for ( uint64_t i = 0; i < iterations; ++i )
     {
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t magic[8];
@@ -3232,7 +3232,7 @@ void test_client_stats_packet_without_near_relays()
     uint64_t iterations = 100;
     for ( uint64_t i = 0; i < iterations; ++i )
     {
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES]; // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t magic[8];
@@ -3299,7 +3299,7 @@ void test_route_update_packet_direct()
     uint64_t iterations = 100;
     for ( uint64_t i = 0; i < iterations; ++i )
     {
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES]; // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t magic[8];
@@ -3312,6 +3312,9 @@ void test_route_update_packet_direct()
         static NextRouteUpdatePacket in, out;
 
         in.sequence = 100000;
+
+        // todo: near relays in another packet
+        /*
         in.has_near_relays = true;
         in.num_near_relays = NEXT_MAX_NEAR_RELAYS;
         for ( int j = 0; j < NEXT_MAX_NEAR_RELAYS; ++j )
@@ -3325,6 +3328,8 @@ void test_route_update_packet_direct()
             next_crypto_random_bytes( in.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES );
         }
         in.near_relay_expire_timestamp = 0x12341987439187LL;
+        */
+
         in.update_type = NEXT_UPDATE_TYPE_DIRECT;
         in.packets_sent_server_to_client = 11000;
         in.packets_lost_client_to_server = 10000;
@@ -3333,8 +3338,12 @@ void test_route_update_packet_direct()
         next_crypto_random_bytes( in.current_magic, 8 );
         next_crypto_random_bytes( in.previous_magic, 8 );
         in.jitter_client_to_server = 0.1f;
+
+        // todo: probably need to remove debug string
+        /*
         in.has_debug = true;
         strcpy( in.debug, "debug time" );
+        */
 
         static next_replay_protection_t replay_protection;
         next_replay_protection_reset( &replay_protection );
@@ -3354,6 +3363,9 @@ void test_route_update_packet_direct()
 
         next_check( in_sequence == out_sequence + 1 );
         next_check( in.sequence == out.sequence );
+
+        // todo: near relays in another packet
+        /*
         next_check( in.has_near_relays == out.has_near_relays );
         next_check( in.num_near_relays == out.num_near_relays );
         for ( int j = 0; j < NEXT_MAX_NEAR_RELAYS; ++j )
@@ -3363,6 +3375,8 @@ void test_route_update_packet_direct()
             next_check( memcmp( in.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, out.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES ) == 0 );
         }
         next_check( in.near_relay_expire_timestamp == out.near_relay_expire_timestamp );
+        */
+
         next_check( in.update_type == out.update_type );
         next_check( in.packets_sent_server_to_client == out.packets_sent_server_to_client );
         next_check( in.packets_lost_client_to_server == out.packets_lost_client_to_server );
@@ -3371,8 +3385,12 @@ void test_route_update_packet_direct()
         next_check( memcmp( in.current_magic, out.current_magic, 8 ) == 0 );
         next_check( memcmp( in.previous_magic, out.previous_magic, 8 ) == 0 );
         next_check( in.jitter_client_to_server == out.jitter_client_to_server );
+
+        // todo
+        /*
         next_check( in.has_debug == out.has_debug );
         next_check( strcmp( in.debug, out.debug ) == 0 );
+        */
     }
 }
 
@@ -3382,7 +3400,7 @@ void test_route_update_packet_new_route()
     uint64_t iterations = 100;
     for ( uint64_t i = 0; i < iterations; ++i )
     {
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES]; // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t magic[8];
@@ -3394,6 +3412,9 @@ void test_route_update_packet_new_route()
 
         static NextRouteUpdatePacket in, out;
         in.sequence = 100000;
+
+        // todo: near relays in another packet
+        /*
         in.has_near_relays = true;
         in.num_near_relays = NEXT_MAX_NEAR_RELAYS;
         for ( int j = 0; j < NEXT_MAX_NEAR_RELAYS; ++j )
@@ -3407,6 +3428,8 @@ void test_route_update_packet_new_route()
             next_crypto_random_bytes( in.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES );
         }
         in.near_relay_expire_timestamp = 0x12341987439187LL;
+        */
+
         in.update_type = NEXT_UPDATE_TYPE_ROUTE;
         in.multipath = true;
         in.num_tokens = NEXT_MAX_TOKENS;
@@ -3437,6 +3460,9 @@ void test_route_update_packet_new_route()
 
         next_check( in_sequence == out_sequence + 1 );
         next_check( in.sequence == out.sequence );
+
+        // todo: near relays in another packet
+        /*
         next_check( in.has_near_relays == out.has_near_relays );
         next_check( in.num_near_relays == out.num_near_relays );
         for ( int j = 0; j < NEXT_MAX_NEAR_RELAYS; ++j )
@@ -3446,6 +3472,8 @@ void test_route_update_packet_new_route()
             next_check( memcmp( in.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, out.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES ) == 0 );
         }
         next_check( in.near_relay_expire_timestamp == out.near_relay_expire_timestamp );
+        */
+
         next_check( in.update_type == out.update_type );
         next_check( in.multipath == out.multipath );
         next_check( in.num_tokens == out.num_tokens );
@@ -3466,7 +3494,7 @@ void test_route_update_packet_continue_route()
     uint64_t iterations = 100;
     for ( uint64_t i = 0; i < iterations; ++i )
     {
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES]; // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t magic[8];
@@ -3478,6 +3506,9 @@ void test_route_update_packet_continue_route()
         
         static NextRouteUpdatePacket in, out;
         in.sequence = 100000;
+
+        // todo: near relays in another packet
+        /*
         in.has_near_relays = true;
         in.num_near_relays = NEXT_MAX_NEAR_RELAYS;
         for ( int j = 0; j < NEXT_MAX_NEAR_RELAYS; ++j )
@@ -3491,6 +3522,8 @@ void test_route_update_packet_continue_route()
             next_crypto_random_bytes( in.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES );
         }
         in.near_relay_expire_timestamp = 0x12341987439187LL;
+        */
+
         in.update_type = NEXT_UPDATE_TYPE_CONTINUE;
         in.multipath = true;
         in.num_tokens = NEXT_MAX_TOKENS;
@@ -3515,6 +3548,9 @@ void test_route_update_packet_continue_route()
 
         next_check( in_sequence == out_sequence + 1 );
         next_check( in.sequence == out.sequence );
+
+        // todo: near relays in another packet
+        /*
         next_check( in.has_near_relays == out.has_near_relays );
         next_check( in.num_near_relays == out.num_near_relays );
         for ( int j = 0; j < NEXT_MAX_NEAR_RELAYS; ++j )
@@ -3524,6 +3560,8 @@ void test_route_update_packet_continue_route()
             next_check( memcmp( in.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, out.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES ) == 0 );
         }
         next_check( in.near_relay_expire_timestamp == out.near_relay_expire_timestamp );
+        */
+
         next_check( in.update_type == out.update_type );
         next_check( in.multipath == out.multipath );
         next_check( in.num_tokens == out.num_tokens );
@@ -3541,7 +3579,7 @@ void test_route_update_ack_packet()
     uint64_t iterations = 100;
     for ( uint64_t i = 0; i < iterations; ++i )
     {
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES]; // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t magic[8];
@@ -3988,6 +4026,9 @@ void test_session_response_packet_direct_has_near_relays()
         static NextBackendSessionUpdateResponsePacket in, out;
         in.slice_number = 10000;
         in.session_id = 1234342431431LL;
+
+        // todo: move into another packet type
+        /*
         in.has_near_relays = true;
         in.num_near_relays = NEXT_MAX_NEAR_RELAYS;
         for ( int j = 0; j < NEXT_MAX_NEAR_RELAYS; ++j )
@@ -4001,6 +4042,8 @@ void test_session_response_packet_direct_has_near_relays()
             next_crypto_random_bytes( in.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES );
         }
         in.near_relay_expire_timestamp = 0x1234172487187LL;
+        */
+
         in.response_type = NEXT_UPDATE_TYPE_DIRECT;
         in.session_data_bytes = NEXT_MAX_SESSION_DATA_BYTES;
         for ( int j = 0; j < NEXT_MAX_SESSION_DATA_BYTES; ++j )
@@ -4030,6 +4073,9 @@ void test_session_response_packet_direct_has_near_relays()
 
         next_check( in.slice_number == out.slice_number );
         next_check( in.session_id == out.session_id );
+
+        // todo: move into another packet
+        /*
         next_check( in.has_near_relays == out.has_near_relays );
         next_check( in.num_near_relays == out.num_near_relays );
         for ( int j = 0; j < NEXT_MAX_NEAR_RELAYS; ++j )
@@ -4039,6 +4085,8 @@ void test_session_response_packet_direct_has_near_relays()
             next_check( memcmp( in.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, out.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES ) == 0 );
         }
         next_check( in.near_relay_expire_timestamp == out.near_relay_expire_timestamp );
+        */
+
         next_check( in.response_type == out.response_type );
         next_check( in.has_debug == out.has_debug );
         next_check( strcmp( in.debug, out.debug ) == 0 );
@@ -4074,6 +4122,9 @@ void test_session_response_packet_route_has_near_relays()
         static NextBackendSessionUpdateResponsePacket in, out;
         in.slice_number = 10000;
         in.session_id = 1234342431431LL;
+
+        // todo: move into another packet
+        /*
         in.has_near_relays = true;
         in.num_near_relays = NEXT_MAX_NEAR_RELAYS;
         for ( int j = 0; j < NEXT_MAX_NEAR_RELAYS; ++j )
@@ -4087,6 +4138,8 @@ void test_session_response_packet_route_has_near_relays()
             next_crypto_random_bytes( in.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES );
         }
         in.near_relay_expire_timestamp = 0x1234172487187LL;
+        */
+
         in.response_type = NEXT_UPDATE_TYPE_ROUTE;
         in.multipath = true;
         in.num_tokens = NEXT_MAX_TOKENS;
@@ -4117,6 +4170,9 @@ void test_session_response_packet_route_has_near_relays()
 
         next_check( in.slice_number == out.slice_number );
         next_check( in.session_id == out.session_id );
+
+        // todo: move into another packet
+        /*
         next_check( in.has_near_relays == out.has_near_relays );
         next_check( in.num_near_relays == out.num_near_relays );
         for ( int j = 0; j < NEXT_MAX_NEAR_RELAYS; ++j )
@@ -4126,6 +4182,8 @@ void test_session_response_packet_route_has_near_relays()
             next_check( memcmp( in.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, out.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES ) == 0 );
         }
         next_check( in.near_relay_expire_timestamp == out.near_relay_expire_timestamp );
+        */
+
         next_check( in.response_type == out.response_type );
         next_check( in.multipath == out.multipath );
         next_check( in.num_tokens == out.num_tokens );
@@ -4162,6 +4220,9 @@ void test_session_response_packet_continue_has_near_relays()
         static NextBackendSessionUpdateResponsePacket in, out;
         in.slice_number = 10000;
         in.session_id = 1234342431431LL;
+
+        // todo: move into another packet
+        /*
         in.has_near_relays = true;
         in.num_near_relays = NEXT_MAX_NEAR_RELAYS;
         for ( int j = 0; j < NEXT_MAX_NEAR_RELAYS; ++j )
@@ -4175,6 +4236,8 @@ void test_session_response_packet_continue_has_near_relays()
             next_crypto_random_bytes( in.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES );
         }
         in.near_relay_expire_timestamp = 0x1234172487187LL;
+        */
+
         in.response_type = NEXT_UPDATE_TYPE_CONTINUE;
         in.multipath = true;
         in.num_tokens = NEXT_MAX_TOKENS;
@@ -4207,6 +4270,9 @@ void test_session_response_packet_continue_has_near_relays()
         next_check( in.slice_number == out.slice_number );
         next_check( in.session_id == out.session_id );
         next_check( in.multipath == out.multipath );
+
+        // todo: move into another packet
+        /*
         next_check( in.has_near_relays == out.has_near_relays );
         next_check( in.num_near_relays == out.num_near_relays );
         for ( int j = 0; j < NEXT_MAX_NEAR_RELAYS; ++j )
@@ -4216,6 +4282,8 @@ void test_session_response_packet_continue_has_near_relays()
             next_check( memcmp( in.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, out.near_relay_ping_tokens + j * NEXT_PING_TOKEN_BYTES, NEXT_PING_TOKEN_BYTES ) == 0 );
         }
         next_check( in.near_relay_expire_timestamp == out.near_relay_expire_timestamp );
+        */
+
         next_check( in.response_type == out.response_type );
         next_check( in.num_tokens == out.num_tokens );
         next_check( memcmp( in.tokens, out.tokens, NEXT_MAX_TOKENS * NEXT_ENCRYPTED_CONTINUE_TOKEN_BYTES ) == 0 );
@@ -4251,10 +4319,14 @@ void test_session_response_packet_direct_no_near_relays()
         static NextBackendSessionUpdateResponsePacket in, out;
         in.slice_number = 10000;
         in.session_id = 1234342431431LL;
+
+        // todo: move into another packet
+        /*
         in.has_near_relays = false;
         in.response_type = NEXT_UPDATE_TYPE_DIRECT;
         in.multipath = false;
         in.has_near_relays = false;
+        */
 
         int packet_bytes = 0;
         next_check( next_write_backend_packet( NEXT_BACKEND_SESSION_UPDATE_RESPONSE_PACKET, &in, packet_data, &packet_bytes, next_signed_packets, private_key, magic, from_address, 4, to_address, 4 ) == NEXT_OK );
@@ -4272,7 +4344,12 @@ void test_session_response_packet_direct_no_near_relays()
 
         next_check( in.slice_number == out.slice_number );
         next_check( in.session_id == out.session_id );
+
+        // todo: move into another packet
+        /*
         next_check( in.has_near_relays == out.has_near_relays );
+        */
+
         next_check( in.response_type == out.response_type );
         next_check( in.multipath == out.multipath );
     }
@@ -4298,7 +4375,12 @@ void test_session_response_packet_route_no_near_relays()
         static NextBackendSessionUpdateResponsePacket in, out;
         in.slice_number = 10000;
         in.session_id = 1234342431431LL;
+
+        // todo: move into another packet
+        /*
         in.has_near_relays = false;
+        */
+
         in.response_type = NEXT_UPDATE_TYPE_ROUTE;
         in.multipath = true;
         in.num_tokens = NEXT_MAX_TOKENS;
@@ -4326,7 +4408,12 @@ void test_session_response_packet_route_no_near_relays()
         next_check( in.slice_number == out.slice_number );
         next_check( in.session_id == out.session_id );
         next_check( in.multipath == out.multipath );
+
+        // todo: move into another packet
+        /*
         next_check( in.has_near_relays == out.has_near_relays );
+        */
+
         next_check( in.response_type == out.response_type );
         next_check( in.num_tokens == out.num_tokens );
         next_check( memcmp( in.tokens, out.tokens, NEXT_MAX_TOKENS * NEXT_ENCRYPTED_ROUTE_TOKEN_BYTES ) == 0 );
@@ -4353,7 +4440,12 @@ void test_session_response_packet_continue_no_near_relays()
         static NextBackendSessionUpdateResponsePacket in, out;
         in.slice_number = 10000;
         in.session_id = 1234342431431LL;
+
+        // todo: move into another packet
+        /*
         in.has_near_relays = false;
+        */
+
         in.response_type = NEXT_UPDATE_TYPE_CONTINUE;
         in.multipath = true;
         in.num_tokens = NEXT_MAX_TOKENS;
@@ -4385,7 +4477,12 @@ void test_session_response_packet_continue_no_near_relays()
         next_check( in.slice_number == out.slice_number );
         next_check( in.session_id == out.session_id );
         next_check( in.multipath == out.multipath );
+
+        // todo: move into another packet
+        /*
         next_check( in.has_near_relays == out.has_near_relays );
+        */
+
         next_check( in.response_type == out.response_type );
         next_check( in.num_tokens == out.num_tokens );
         next_check( memcmp( in.tokens, out.tokens, NEXT_MAX_TOKENS * NEXT_ENCRYPTED_CONTINUE_TOKEN_BYTES ) == 0 );

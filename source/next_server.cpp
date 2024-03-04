@@ -993,6 +993,9 @@ void next_server_internal_update_route( next_server_internal_t * server )
             memcpy( packet.current_magic, server->current_magic, 8 );
             memcpy( packet.previous_magic, server->previous_magic, 8 );
             packet.sequence = entry->update_sequence;
+
+            // todo: near relays need to go into another packet
+            /*
             packet.has_near_relays = entry->update_has_near_relays;
             if ( packet.has_near_relays )
             {
@@ -1002,6 +1005,8 @@ void next_server_internal_update_route( next_server_internal_t * server )
                 memcpy( packet.near_relay_ping_tokens, entry->update_near_relay_ping_tokens, NEXT_MAX_NEAR_RELAYS * NEXT_PING_TOKEN_BYTES );
                 packet.near_relay_expire_timestamp = entry->update_near_relay_expire_timestamp;
             }
+            */
+
             packet.update_type = entry->update_type;
             packet.multipath = entry->multipath;
             packet.num_tokens = entry->update_num_tokens;
@@ -1612,6 +1617,8 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
             memcpy( entry->update_tokens, packet.tokens, NEXT_ENCRYPTED_CONTINUE_TOKEN_BYTES * size_t(packet.num_tokens) );
         }
 
+        // todo: move into another packet type
+        /*
         entry->update_has_near_relays = packet.has_near_relays;
         if ( packet.has_near_relays )
         {
@@ -1621,6 +1628,7 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
             memcpy( entry->update_near_relay_ping_tokens, packet.near_relay_ping_tokens, packet.num_near_relays * NEXT_PING_TOKEN_BYTES );
             entry->update_near_relay_expire_timestamp = packet.near_relay_expire_timestamp;
         }
+        */
 
         entry->update_last_send_time = -1000.0;
 

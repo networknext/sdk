@@ -1353,6 +1353,8 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
                 next_printf( NEXT_LOG_LEVEL_NONE, "--------------------------------------\n%s--------------------------------------", packet.debug );
             }
 
+            // todo: near relays in another packet
+            /*
             if ( packet.has_near_relays )
             {
                 // enable near relay pings
@@ -1372,6 +1374,7 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
                     next_relay_manager_update( client->near_relay_manager, 0, packet.near_relay_ids, packet.near_relay_addresses, NULL, 0 );
                 }
             }
+            */
 
             {
                 next_platform_mutex_guard( &client->route_manager_mutex );
