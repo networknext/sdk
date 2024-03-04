@@ -265,7 +265,7 @@ inline void next_relay_manager_send_pings( next_relay_manager_t * manager, next_
             next_address_data( client_external_address, from_address_data, &from_address_bytes );
             next_address_data( &manager->relay_addresses[i], to_address_data, &to_address_bytes );
 
-            int packet_bytes = next_write_relay_ping_packet( packet_data, ping_token, ping_sequence, session_id, manager->relay_ping_expire_timestamp, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes );
+            int packet_bytes = next_write_client_ping_packet( packet_data, ping_token, ping_sequence, session_id, manager->relay_ping_expire_timestamp, magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes );
 
             next_assert( packet_bytes > 0 );
 

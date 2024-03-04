@@ -894,8 +894,9 @@ next_session_entry_t * next_server_internal_process_client_to_server_packet( nex
         return NULL;
     }
 
-    next_assert( packet_type == NEXT_CLIENT_TO_SERVER_PACKET || packet_type == NEXT_PING_PACKET );
+    next_assert( packet_type == NEXT_CLIENT_TO_SERVER_PACKET || packet_type == NEXT_SESSION_PING_PACKET );
 
+    // todo: check how special replay protection is used
     next_replay_protection_t * replay_protection = ( packet_type == NEXT_CLIENT_TO_SERVER_PACKET ) ? &entry->payload_replay_protection : &entry->special_replay_protection;
 
     if ( next_replay_protection_already_received( replay_protection, packet_sequence ) )
@@ -2065,22 +2066,22 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
 
     // ping packet
 
-    if ( packet_id == NEXT_PING_PACKET )
+    if ( packet_id == NEXT_SESSION_PING_PACKET )
     {
-        next_printf( NEXT_LOG_LEVEL_SPAM, "server processing next ping packet" );
+        next_printf( NEXT_LOG_LEVEL_SPAM, "server processing session ping packet" );
 
         const int packet_bytes = end - begin;
 
         if ( packet_bytes != NEXT_HEADER_BYTES + 8 )
         {
-            next_printf( NEXT_LOG_LEVEL_DEBUG, "server ignored next ping packet. bad packet size" );
+            next_printf( NEXT_LOG_LEVEL_DEBUG, "server ignored session ping packet. bad packet size" );
             return;
         }
 
         next_session_entry_t * entry = next_server_internal_process_client_to_server_packet( server, packet_id, packet_data + begin, packet_bytes );
         if ( !entry )
         {
-            next_printf( NEXT_LOG_LEVEL_DEBUG, "server ignored next ping packet. did not verify" );
+            next_printf( NEXT_LOG_LEVEL_DEBUG, "server ignored session ping packet. did not verify" );
             return;
         }
 
@@ -2102,7 +2103,7 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
 
         uint8_t pong_packet_data[NEXT_MAX_PACKET_BYTES];
 
-        int pong_packet_bytes = next_write_pong_packet( pong_packet_data, send_sequence, entry->session_id, entry->current_route_session_version, entry->current_route_private_key, ping_sequence, server->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes );
+        int pong_packet_bytes = next_write_session_pong_packet( pong_packet_data, send_sequence, entry->session_id, entry->current_route_session_version, entry->current_route_private_key, ping_sequence, server->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes );
 
         next_assert( pong_packet_bytes > 0 );
 

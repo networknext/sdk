@@ -146,27 +146,31 @@
 #define NEXT_MAX_SESSION_UPDATE_RETRIES                                10
 
 #define NEXT_PASSTHROUGH_PACKET                                         0
-#define NEXT_DIRECT_PACKET                                              1
-#define NEXT_DIRECT_PING_PACKET                                         2
-#define NEXT_DIRECT_PONG_PACKET                                         3
-#define NEXT_UPGRADE_REQUEST_PACKET                                     4
-#define NEXT_UPGRADE_RESPONSE_PACKET                                    5
-#define NEXT_UPGRADE_CONFIRM_PACKET                                     6
-#define NEXT_OLD_RELAY_PING_PACKET                                      7
-#define NEXT_OLD_RELAY_PONG_PACKET                                      8
-#define NEXT_ROUTE_REQUEST_PACKET                                       9
-#define NEXT_ROUTE_RESPONSE_PACKET                                     10
-#define NEXT_CLIENT_TO_SERVER_PACKET                                   11
-#define NEXT_SERVER_TO_CLIENT_PACKET                                   12
-#define NEXT_PING_PACKET                                               13
-#define NEXT_PONG_PACKET                                               14
-#define NEXT_CONTINUE_REQUEST_PACKET                                   15
-#define NEXT_CONTINUE_RESPONSE_PACKET                                  16
-#define NEXT_CLIENT_STATS_PACKET                                       17
-#define NEXT_ROUTE_UPDATE_PACKET                                       18
-#define NEXT_ROUTE_UPDATE_ACK_PACKET                                   19
-#define NEXT_RELAY_PING_PACKET                                         20
-#define NEXT_RELAY_PONG_PACKET                                         21
+
+#define NEXT_ROUTE_REQUEST_PACKET                                       1
+#define NEXT_ROUTE_RESPONSE_PACKET                                      2
+#define NEXT_CLIENT_TO_SERVER_PACKET                                    3
+#define NEXT_SERVER_TO_CLIENT_PACKET                                    4
+#define NEXT_SESSION_PING_PACKET                                        5
+#define NEXT_SESSION_PONG_PACKET                                        6
+#define NEXT_CONTINUE_REQUEST_PACKET                                    7
+#define NEXT_CONTINUE_RESPONSE_PACKET                                   8
+#define NEXT_CLIENT_PING_PACKET                                         9
+#define NEXT_CLIENT_PONG_PACKET                                        10
+#define NEXT_RESERVED_PACKET_1                                         11
+#define NEXT_RESERVED_PACKET_2                                         12
+#define NEXT_SERVER_PING_PACKET                                        13
+#define NEXT_SERVER_PONG_PACKET                                        14
+
+#define NEXT_DIRECT_PACKET                                             20
+#define NEXT_DIRECT_PING_PACKET                                        21
+#define NEXT_DIRECT_PONG_PACKET                                        22
+#define NEXT_UPGRADE_REQUEST_PACKET                                    23
+#define NEXT_UPGRADE_RESPONSE_PACKET                                   24
+#define NEXT_UPGRADE_CONFIRM_PACKET                                    25
+#define NEXT_ROUTE_UPDATE_PACKET                                       26
+#define NEXT_ROUTE_UPDATE_ACK_PACKET                                   27
+#define NEXT_CLIENT_STATS_PACKET                                       28
 
 #define NEXT_BACKEND_SERVER_INIT_REQUEST_PACKET                        50
 #define NEXT_BACKEND_SERVER_INIT_RESPONSE_PACKET                       51

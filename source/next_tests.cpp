@@ -2989,7 +2989,7 @@ void test_server_to_client_packet()
     }
 }
 
-void test_ping_packet()
+void test_session_ping_packet()
 {
     uint8_t packet_data[NEXT_MAX_PACKET_BYTES];
     uint64_t iterations = 100;
@@ -3005,18 +3005,18 @@ void test_ping_packet()
         uint64_t send_sequence = i + 1000;
         uint64_t session_id = 0x12314141LL;
         uint8_t session_version = uint8_t(i%256);
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];
+        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];        // todo: crypto update
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint64_t ping_sequence = i;
-        int packet_bytes = next_write_ping_packet( packet_data, send_sequence, session_id, session_version, private_key, ping_sequence, magic, from_address, 4, to_address, 4 );
+        int packet_bytes = next_write_session_ping_packet( packet_data, send_sequence, session_id, session_version, private_key, ping_sequence, magic, from_address, 4, to_address, 4 );
 
         next_check( packet_bytes > 0 );
 
         next_check( next_basic_packet_filter( packet_data, packet_bytes ) );
         next_check( next_advanced_packet_filter( packet_data, magic, from_address, 4, to_address, 4, packet_bytes ) );
 
-        next_check( packet_data[0] == NEXT_PING_PACKET );
+        next_check( packet_data[0] == NEXT_SESSION_PING_PACKET );
 
         uint64_t read_packet_sequence = 0;
         uint64_t read_packet_session_id = 0;
@@ -3025,7 +3025,7 @@ void test_ping_packet()
         uint8_t * read_packet_data = packet_data + 16;
         int read_packet_bytes = packet_bytes - 16;
 
-        next_check( next_read_header( NEXT_PING_PACKET, &read_packet_sequence, &read_packet_session_id, &read_packet_session_version, private_key, read_packet_data, read_packet_bytes ) == NEXT_OK );
+        next_check( next_read_header( NEXT_SESSION_PING_PACKET, &read_packet_sequence, &read_packet_session_id, &read_packet_session_version, private_key, read_packet_data, read_packet_bytes ) == NEXT_OK );
 
         next_check( read_packet_sequence == send_sequence );
         next_check( read_packet_session_id == session_id );
@@ -3033,7 +3033,7 @@ void test_ping_packet()
     }
 }
 
-void test_pong_packet()
+void test_session_pong_packet()
 {
     uint8_t packet_data[NEXT_MAX_PACKET_BYTES];
     uint64_t iterations = 100;
@@ -3054,14 +3054,14 @@ void test_pong_packet()
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint64_t ping_sequence = i;
-        int packet_bytes = next_write_pong_packet( packet_data, send_sequence, session_id, session_version, private_key, ping_sequence, magic, from_address, 4, to_address, 4 );
+        int packet_bytes = next_write_session_pong_packet( packet_data, send_sequence, session_id, session_version, private_key, ping_sequence, magic, from_address, 4, to_address, 4 );
 
         next_check( packet_bytes > 0 );
 
         next_check( next_basic_packet_filter( packet_data, packet_bytes ) );
         next_check( next_advanced_packet_filter( packet_data, magic, from_address, 4, to_address, 4, packet_bytes ) );
 
-        next_check( packet_data[0] == NEXT_PONG_PACKET );
+        next_check( packet_data[0] == NEXT_SESSION_PONG_PACKET );
 
         uint64_t read_packet_sequence = 0;
         uint64_t read_packet_session_id = 0;
@@ -3070,7 +3070,7 @@ void test_pong_packet()
         uint8_t * read_packet_data = packet_data + 16;
         int read_packet_bytes = packet_bytes - 16;
 
-        next_check( next_read_header( NEXT_PONG_PACKET, &read_packet_sequence, &read_packet_session_id, &read_packet_session_version, private_key, read_packet_data, read_packet_bytes ) == NEXT_OK );
+        next_check( next_read_header( NEXT_SESSION_PONG_PACKET, &read_packet_sequence, &read_packet_session_id, &read_packet_session_version, private_key, read_packet_data, read_packet_bytes ) == NEXT_OK );
 
         next_check( read_packet_sequence == send_sequence );
         next_check( read_packet_session_id == session_id );
@@ -3575,7 +3575,7 @@ void test_route_update_ack_packet()
     }
 }
 
-void test_relay_ping_packet()
+void test_client_ping_packet()
 {
     uint8_t packet_data[NEXT_MAX_PACKET_BYTES];
     uint64_t iterations = 100;
@@ -3595,7 +3595,7 @@ void test_relay_ping_packet()
         uint64_t ping_session_id = 0x12345;
         uint64_t ping_expire_timestamp = 0x123415817414;
 
-        int packet_bytes = next_write_relay_ping_packet( packet_data, ping_token, ping_sequence, ping_session_id, ping_expire_timestamp, magic, from_address, 4, to_address, 4 );
+        int packet_bytes = next_write_client_ping_packet( packet_data, ping_token, ping_sequence, ping_session_id, ping_expire_timestamp, magic, from_address, 4, to_address, 4 );
 
         next_check( packet_bytes >= 0 );
         next_check( packet_bytes <= NEXT_MTU + 27 );
@@ -3603,7 +3603,7 @@ void test_relay_ping_packet()
         next_check( next_basic_packet_filter( packet_data, packet_bytes ) );
         next_check( next_advanced_packet_filter( packet_data, magic, from_address, 4, to_address, 4, packet_bytes ) );
 
-        next_check( packet_data[0] == NEXT_RELAY_PING_PACKET );
+        next_check( packet_data[0] == NEXT_CLIENT_PING_PACKET );
 
         const uint8_t * p = packet_data + 16;
         uint64_t read_ping_sequence = next_read_uint64( &p );
@@ -3618,7 +3618,7 @@ void test_relay_ping_packet()
     }
 }
 
-void test_relay_pong_packet()
+void test_client_pong_packet()
 {
     uint8_t packet_data[NEXT_MAX_PACKET_BYTES];
     uint64_t iterations = 100;
@@ -3634,7 +3634,7 @@ void test_relay_pong_packet()
         uint64_t pong_sequence = i;
         uint64_t pong_session_id = 0x123456;
 
-        int packet_bytes = next_write_relay_pong_packet( packet_data, pong_sequence, pong_session_id, magic, from_address, 4, to_address, 4 );
+        int packet_bytes = next_write_client_pong_packet( packet_data, pong_sequence, pong_session_id, magic, from_address, 4, to_address, 4 );
 
         next_check( packet_bytes >= 0 );
         next_check( packet_bytes <= NEXT_MTU + 27 );
@@ -3642,7 +3642,7 @@ void test_relay_pong_packet()
         next_check( next_basic_packet_filter( packet_data, packet_bytes ) );
         next_check( next_advanced_packet_filter( packet_data, magic, from_address, 4, to_address, 4, packet_bytes ) );
 
-        next_check( packet_data[0] == NEXT_RELAY_PONG_PACKET );
+        next_check( packet_data[0] == NEXT_CLIENT_PONG_PACKET );
 
         const uint8_t * p = packet_data + 16;
         uint64_t read_pong_sequence = next_read_uint64( &p );
@@ -4616,8 +4616,8 @@ void next_run_tests()
         RUN_TEST( test_route_response_packet );
         RUN_TEST( test_client_to_server_packet );
         RUN_TEST( test_server_to_client_packet );
-        RUN_TEST( test_ping_packet );
-        RUN_TEST( test_pong_packet );
+        RUN_TEST( test_session_ping_packet );
+        RUN_TEST( test_session_pong_packet );
         RUN_TEST( test_continue_request_packet );
         RUN_TEST( test_continue_response_packet );
         RUN_TEST( test_client_stats_packet_with_near_relays );
@@ -4626,8 +4626,9 @@ void next_run_tests()
         RUN_TEST( test_route_update_packet_new_route );
         RUN_TEST( test_route_update_packet_continue_route );
         RUN_TEST( test_route_update_ack_packet );
-        RUN_TEST( test_relay_ping_packet );
-        RUN_TEST( test_relay_pong_packet );
+        RUN_TEST( test_client_ping_packet );
+        RUN_TEST( test_client_pong_packet );
+        // todo: server_ping/pong_packet
         RUN_TEST( test_server_init_request_packet );
         RUN_TEST( test_server_init_response_packet );
         RUN_TEST( test_server_update_packet );

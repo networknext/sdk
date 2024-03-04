@@ -679,6 +679,8 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
             return;
         }
 
+        // todo: header
+
         NextUpgradeRequestPacket packet;
         int begin = 16;
         int end = packet_bytes - 2;
@@ -816,6 +818,8 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
             return;
         }
 
+        // todo: header
+
         NextUpgradeConfirmPacket packet;
         int begin = 16;
         int end = packet_bytes - 2;
@@ -886,6 +890,8 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
     {
         next_printf( NEXT_LOG_LEVEL_SPAM, "client processing direct packet" );
 
+        // todo: header
+
         packet_data += 16;
         packet_bytes -= 18;
 
@@ -952,6 +958,8 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
     if ( packet_id == NEXT_ROUTE_RESPONSE_PACKET )
     {
         next_printf( NEXT_LOG_LEVEL_SPAM, "client processing route response packet" );
+
+        // todo: header
 
         packet_data += 16;
         packet_bytes -= 18;
@@ -1043,6 +1051,8 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
     {
         next_printf( NEXT_LOG_LEVEL_SPAM, "client processing continue response packet" );
 
+        // todo: header
+
         packet_data += 16;
         packet_bytes -= 18;
 
@@ -1130,6 +1140,8 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
     {
         next_printf( NEXT_LOG_LEVEL_SPAM, "client processing server to client packet" );
 
+        // todo: header
+
         packet_data += 16;
         packet_bytes -= 18;
 
@@ -1179,11 +1191,13 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
         return;
     }
 
-    // next pong packet
+    // session pong packet
 
-    if ( packet_id == NEXT_PONG_PACKET )
+    if ( packet_id == NEXT_SESSION_PONG_PACKET )
     {
-        next_printf( NEXT_LOG_LEVEL_SPAM, "client processing next pong packet" );
+        next_printf( NEXT_LOG_LEVEL_SPAM, "client processing session pong packet" );
+
+        // todo: header
 
         packet_data += 16;
         packet_bytes -= 18;
@@ -1198,9 +1212,11 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
 
         if ( !result )
         {
-            next_printf( NEXT_LOG_LEVEL_DEBUG, "client ignored server to client packet. could not verify" );
+            next_printf( NEXT_LOG_LEVEL_DEBUG, "client ignored session pong packet. could not verify" );
             return;
         }
+
+        // todo: special replay protection. check what is done
 
         if ( next_replay_protection_already_received( &client->special_replay_protection, payload_sequence ) )
             return;
@@ -1218,17 +1234,19 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
         return;
     }
 
-    // relay pong packet
+    // client pong packet from near relay
 
-    if ( packet_id == NEXT_RELAY_PONG_PACKET )
+    if ( packet_id == NEXT_CLIENT_PONG_PACKET )
     {
-        next_printf( NEXT_LOG_LEVEL_SPAM, "client processing relay pong packet" );
+        next_printf( NEXT_LOG_LEVEL_SPAM, "client processing client pong packet" );
 
         if ( !client->upgraded )
         {
-            next_printf( NEXT_LOG_LEVEL_DEBUG, "client ignored relay pong packet. not upgraded yet" );
+            next_printf( NEXT_LOG_LEVEL_DEBUG, "client ignored client pong packet. not upgraded yet" );
             return;
         }
+
+        // todo: header
 
         packet_data += 16;
         packet_bytes -= 18;
@@ -1240,7 +1258,7 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
 
         if ( ping_session_id != client->session_id )
         {
-            next_printf( NEXT_LOG_LEVEL_DEBUG, "client ignoring relay pong packet. session id does not match" );
+            next_printf( NEXT_LOG_LEVEL_DEBUG, "client ignoring client pong packet. session id does not match" );
             return;
         }
 
@@ -1268,6 +1286,8 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
         NextDirectPongPacket packet;
 
         uint64_t packet_sequence = 0;
+
+        // todo: header
 
         int begin = 16;
         int end = packet_bytes - 2;
@@ -1302,6 +1322,8 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
         NextRouteUpdatePacket packet;
 
         uint64_t packet_sequence = 0;
+
+        // todo: header
 
         int begin = 16;
         int end = packet_bytes - 2;
@@ -2031,7 +2053,7 @@ void next_client_internal_update_next_pings( next_client_internal_t * client )
 
         const uint64_t ping_sequence = next_ping_history_ping_sent( &client->next_ping_history, current_time );
 
-        int packet_bytes = next_write_ping_packet( packet_data, sequence, session_id, session_version, private_key, ping_sequence, client->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes );
+        int packet_bytes = next_write_session_ping_packet( packet_data, sequence, session_id, session_version, private_key, ping_sequence, client->current_magic, from_address_data, from_address_bytes, to_address_data, to_address_bytes );
 
         next_assert( packet_bytes > 0 );
 
