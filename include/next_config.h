@@ -189,6 +189,10 @@
 
 #define NEXT_SESSION_PRIVATE_KEY_BYTES                                 32
 
+#define NEXT_PING_KEY_BYTES                                            32
+
+#define NEXT_SECRET_KEY_BYTES                                          32
+
 extern uint8_t next_server_backend_public_key[];
 
 extern uint8_t next_relay_backend_public_key[];

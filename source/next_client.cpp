@@ -225,6 +225,7 @@ struct next_client_internal_t
     uint8_t client_receive_key[NEXT_CRYPTO_KX_SESSIONKEYBYTES];
     uint8_t client_route_public_key[NEXT_CRYPTO_BOX_PUBLICKEYBYTES];
     uint8_t client_route_private_key[NEXT_CRYPTO_BOX_SECRETKEYBYTES];
+    uint8_t client_secret_key[NEXT_SECRET_KEY_BYTES];
 
     NEXT_DECLARE_SENTINEL(5)
 
@@ -1197,7 +1198,7 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
             return;
         }
 
-        // todo: special replay protection. check what is done
+        // todo: special replay protection. check what is done vs. regular, and does it have consequences for the relay
         if ( next_replay_protection_already_received( &client->special_replay_protection, payload_sequence ) )
             return;
 
@@ -1347,7 +1348,7 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
 
             {
                 next_platform_mutex_guard( &client->route_manager_mutex );
-                next_route_manager_update( client->route_manager, packet.update_type, packet.num_tokens, packet.tokens, next_relay_backend_public_key, client->client_route_private_key, client->current_magic, &client->client_external_address );
+                next_route_manager_update( client->route_manager, packet.update_type, packet.num_tokens, packet.tokens, client->client_secret_key, client->current_magic, &client->client_external_address );
                 fallback_to_direct = next_route_manager_get_fallback_to_direct( client->route_manager );
             }
 

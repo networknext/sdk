@@ -462,8 +462,6 @@ bool next_is_payload_packet( uint8_t packet_id )
 
 int next_read_packet( uint8_t packet_id, uint8_t * packet_data, int begin, int end, void * packet_object, const int * signed_packet, const int * encrypted_packet, uint64_t * sequence, const uint8_t * sign_public_key, const uint8_t * encrypt_private_key, next_replay_protection_t * replay_protection )
 {
-    // todo: header
-
     next_assert( packet_data );
     next_assert( packet_object );
 
@@ -628,8 +626,6 @@ void next_post_validate_packet( uint8_t packet_id, const int * encrypted_packet,
 
 int next_write_backend_packet( uint8_t packet_id, void * packet_object, uint8_t * packet_data, int * packet_bytes, const int * signed_packet, const uint8_t * sign_private_key, const uint8_t * magic, const uint8_t * from_address, const uint8_t * to_address )
 {
-    // todo: header
-
     next_assert( packet_object );
     next_assert( packet_data );
     next_assert( packet_bytes );

@@ -26,6 +26,8 @@
 #include "next.h"
 #include "next_crypto.h"
 
+#include <sodium.h> // todo: crypto
+
 struct next_continue_token_t
 {
     uint64_t expire_timestamp;
@@ -33,119 +35,53 @@ struct next_continue_token_t
     uint8_t session_version;
 };
 
-inline void next_write_continue_token( next_continue_token_t * token, uint8_t * buffer, int buffer_length )
-{
-    (void) buffer_length;
-
-    next_assert( token );
-    next_assert( buffer );
-    next_assert( buffer_length >= NEXT_CONTINUE_TOKEN_BYTES );
-
-    uint8_t * start = buffer;
-
-    (void) start;
-
-    next_write_uint64( &buffer, token->expire_timestamp );
-    next_write_uint64( &buffer, token->session_id );
-    next_write_uint8( &buffer, token->session_version );
-
-    next_assert( buffer - start == NEXT_CONTINUE_TOKEN_BYTES );
-}
-
 inline void next_read_continue_token( next_continue_token_t * token, const uint8_t * buffer )
 {
     next_assert( token );
     next_assert( buffer );
 
-    const uint8_t * start = buffer;
+    const uint8_t * p = buffer;
 
-    (void) start;
+    token->expire_timestamp = next_read_uint64( &p );
+    token->session_id = next_read_uint64( &p );
+    token->session_version = next_read_uint8( &p );
 
-    token->expire_timestamp = next_read_uint64( &buffer );
-    token->session_id = next_read_uint64( &buffer );
-    token->session_version = next_read_uint8( &buffer );
-
-    next_assert( buffer - start == NEXT_CONTINUE_TOKEN_BYTES );
+    next_assert( p - buffer == NEXT_CONTINUE_TOKEN_BYTES );
 }
 
-inline int next_encrypt_continue_token( uint8_t * sender_private_key, uint8_t * receiver_public_key, uint8_t * nonce, uint8_t * buffer, int buffer_length )
+inline int next_decrypt_continue_token( const uint8_t * key, const uint8_t * nonce, uint8_t * buffer, uint8_t * decrypted )
 {
-    next_assert( sender_private_key );
-    next_assert( receiver_public_key );
+    next_assert( key );
     next_assert( buffer );
-    next_assert( buffer_length >= (int) ( NEXT_CONTINUE_TOKEN_BYTES + NEXT_CRYPTO_BOX_MACBYTES ) );
-
-    (void) buffer_length;
-
-    if ( next_crypto_box_easy( buffer, buffer, NEXT_CONTINUE_TOKEN_BYTES, nonce, receiver_public_key, sender_private_key ) != 0 )
+    unsigned long long decrypted_len;
+    // todo: crypto_* wrap
+    if ( crypto_aead_xchacha20poly1305_ietf_decrypt( decrypted, &decrypted_len, NULL, buffer, NEXT_ROUTE_TOKEN_BYTES + crypto_aead_xchacha20poly1305_ietf_ABYTES, NULL, 0, nonce, key ) != 0 )
     {
         return NEXT_ERROR;
     }
-
     return NEXT_OK;
 }
 
-inline int next_decrypt_continue_token( const uint8_t * sender_public_key, const uint8_t * receiver_private_key, const uint8_t * nonce, uint8_t * buffer )
-{
-    next_assert( sender_public_key );
-    next_assert( receiver_private_key );
-    next_assert( buffer );
-
-    if ( next_crypto_box_open_easy( buffer, buffer, NEXT_CONTINUE_TOKEN_BYTES + NEXT_CRYPTO_BOX_MACBYTES, nonce, sender_public_key, receiver_private_key ) != 0 )
-    {
-        return NEXT_ERROR;
-    }
-
-    return NEXT_OK;
-}
-
-inline int next_write_encrypted_continue_token( uint8_t ** buffer, next_continue_token_t * token, uint8_t * sender_private_key, uint8_t * receiver_public_key )
+inline int next_read_encrypted_continue_token( uint8_t ** buffer, next_continue_token_t * token, const uint8_t * key )
 {
     next_assert( buffer );
     next_assert( token );
-    next_assert( sender_private_key );
-    next_assert( receiver_public_key );
-
-    unsigned char nonce[NEXT_CRYPTO_BOX_NONCEBYTES];
-    next_crypto_random_bytes( nonce, NEXT_CRYPTO_BOX_NONCEBYTES );
-
-    uint8_t * start = *buffer;
-
-    next_write_bytes( buffer, nonce, NEXT_CRYPTO_BOX_NONCEBYTES );
-
-    next_write_continue_token( token, *buffer, NEXT_CONTINUE_TOKEN_BYTES );
-
-    if ( next_encrypt_continue_token( sender_private_key, receiver_public_key, nonce, *buffer, NEXT_CONTINUE_TOKEN_BYTES + NEXT_CRYPTO_BOX_NONCEBYTES ) != NEXT_OK )
-        return NEXT_ERROR;
-
-    *buffer += NEXT_CONTINUE_TOKEN_BYTES + NEXT_CRYPTO_BOX_MACBYTES;
-
-    (void) start;
-
-    next_assert( ( *buffer - start ) == NEXT_ENCRYPTED_CONTINUE_TOKEN_BYTES );
-
-    return NEXT_OK;
-}
-
-inline int next_read_encrypted_continue_token( uint8_t ** buffer, next_continue_token_t * token, const uint8_t * sender_public_key, const uint8_t * receiver_private_key )
-{
-    next_assert( buffer );
-    next_assert( token );
-    next_assert( sender_public_key );
-    next_assert( receiver_private_key );
+    next_assert( key );
 
     const uint8_t * nonce = *buffer;
 
-    *buffer += NEXT_CRYPTO_BOX_NONCEBYTES;
+    *buffer += 24;
 
-    if ( next_decrypt_continue_token( sender_public_key, receiver_private_key, nonce, *buffer ) != NEXT_OK )
+    uint8_t decrypted[NEXT_ROUTE_TOKEN_BYTES];
+
+    if ( next_decrypt_continue_token( key, nonce, *buffer, decrypted ) != NEXT_OK )
     {
         return NEXT_ERROR;
     }
 
-    next_read_continue_token( token, *buffer );
+    next_read_continue_token( token, decrypted );
 
-    *buffer += NEXT_CONTINUE_TOKEN_BYTES + NEXT_CRYPTO_BOX_MACBYTES;
+    *buffer += NEXT_CONTINUE_TOKEN_BYTES + 16;
 
     return NEXT_OK;
 }

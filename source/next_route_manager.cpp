@@ -227,7 +227,7 @@ void next_route_manager_direct_route( next_route_manager_t * route_manager, bool
     route_manager->route_data.current_route = false;
 }
 
-void next_route_manager_begin_next_route( next_route_manager_t * route_manager, int num_tokens, uint8_t * tokens, const uint8_t * public_key, const uint8_t * private_key, const uint8_t * magic, const next_address_t * client_external_address )
+void next_route_manager_begin_next_route( next_route_manager_t * route_manager, int num_tokens, uint8_t * tokens, const uint8_t * client_secret_key, const uint8_t * magic, const next_address_t * client_external_address )
 {
     next_route_manager_verify_sentinels( route_manager );
 
@@ -240,7 +240,7 @@ void next_route_manager_begin_next_route( next_route_manager_t * route_manager, 
 
     uint8_t * p = tokens;
     next_route_token_t route_token;
-    if ( next_read_encrypted_route_token( &p, &route_token, public_key, private_key ) != NEXT_OK )
+    if ( next_read_encrypted_route_token( &p, &route_token, client_secret_key ) != NEXT_OK )
     {
         next_printf( NEXT_LOG_LEVEL_ERROR, "client received bad route token" );
         next_route_manager_fallback_to_direct( route_manager, NEXT_FLAGS_BAD_ROUTE_TOKEN );
@@ -252,7 +252,9 @@ void next_route_manager_begin_next_route( next_route_manager_t * route_manager, 
     route_manager->route_data.pending_route = true;
     route_manager->route_data.pending_route_start_time = next_platform_time();
     route_manager->route_data.pending_route_last_send_time = -1000.0;
-    route_manager->route_data.pending_route_next_address = route_token.next_address;
+    // todo: fix up address
+    // route_manager->route_data.pending_route_next_address = htonl( route_token.next_address.data.ip );
+//    route_manager->route_data.pending_route_next_port = htons( route_token.next_address.port );
     route_manager->route_data.pending_route_session_id = route_token.session_id;
     route_manager->route_data.pending_route_session_version = route_token.session_version;
     route_manager->route_data.pending_route_kbps_up = route_token.kbps_up;
@@ -268,7 +270,8 @@ void next_route_manager_begin_next_route( next_route_manager_t * route_manager, 
     uint8_t to_address_data[4];
 
     next_address_data( client_external_address, from_address_data );
-    next_address_data( &route_token.next_address, to_address_data );
+    // todo: fix up
+    //    next_address_data( &route_token.next_address, to_address_data );
 
     route_manager->route_data.pending_route_request_packet_bytes = next_write_route_request_packet( route_manager->route_data.pending_route_request_packet_data, token_data, token_bytes, magic, from_address_data, to_address_data );
 
@@ -285,7 +288,7 @@ void next_route_manager_begin_next_route( next_route_manager_t * route_manager, 
     (void) packet_bytes;
 }
 
-void next_route_manager_continue_next_route( next_route_manager_t * route_manager, int num_tokens, uint8_t * tokens, const uint8_t * public_key, const uint8_t * private_key, const uint8_t * magic, const next_address_t * client_external_address )
+void next_route_manager_continue_next_route( next_route_manager_t * route_manager, int num_tokens, uint8_t * tokens, const uint8_t * secret_key, const uint8_t * magic, const next_address_t * client_external_address )
 {
     next_route_manager_verify_sentinels( route_manager );
 
@@ -312,7 +315,7 @@ void next_route_manager_continue_next_route( next_route_manager_t * route_manage
 
     uint8_t * p = tokens;
     next_continue_token_t continue_token;
-    if ( next_read_encrypted_continue_token( &p, &continue_token, public_key, private_key ) != NEXT_OK )
+    if ( next_read_encrypted_continue_token( &p, &continue_token, secret_key ) != NEXT_OK )
     {
         next_printf( NEXT_LOG_LEVEL_ERROR, "client received bad continue token" );
         next_route_manager_fallback_to_direct( route_manager, NEXT_FLAGS_BAD_CONTINUE_TOKEN );
@@ -349,12 +352,11 @@ void next_route_manager_continue_next_route( next_route_manager_t * route_manage
     next_printf( NEXT_LOG_LEVEL_INFO, "client continues route" );
 }
 
-void next_route_manager_update( next_route_manager_t * route_manager, int update_type, int num_tokens, uint8_t * tokens, const uint8_t * public_key, const uint8_t * private_key, const uint8_t * magic, const next_address_t * client_external_address )
+void next_route_manager_update( next_route_manager_t * route_manager, int update_type, int num_tokens, uint8_t * tokens, const uint8_t * client_secret_key, const uint8_t * magic, const next_address_t * client_external_address )
 {
     next_route_manager_verify_sentinels( route_manager );
 
-    next_assert( public_key );
-    next_assert( private_key );
+    next_assert( client_secret_key );
 
     if ( update_type == NEXT_UPDATE_TYPE_DIRECT )
     {
@@ -362,11 +364,14 @@ void next_route_manager_update( next_route_manager_t * route_manager, int update
     }
     else if ( update_type == NEXT_UPDATE_TYPE_ROUTE )
     {
-        next_route_manager_begin_next_route( route_manager, num_tokens, tokens, public_key, private_key, magic, client_external_address );
+        next_route_manager_begin_next_route( route_manager, num_tokens, tokens, client_secret_key, magic, client_external_address );
     }
     else if ( update_type == NEXT_UPDATE_TYPE_CONTINUE )
     {
+        // todo: secret key
+        /*
         next_route_manager_continue_next_route( route_manager, num_tokens, tokens, public_key, private_key, magic, client_external_address );
+        */
     }
 }
 

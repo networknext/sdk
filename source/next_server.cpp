@@ -292,6 +292,7 @@ struct next_server_internal_t
     uint8_t server_kx_private_key[NEXT_CRYPTO_KX_SECRETKEYBYTES];
     uint8_t server_route_public_key[NEXT_CRYPTO_BOX_PUBLICKEYBYTES];
     uint8_t server_route_private_key[NEXT_CRYPTO_BOX_SECRETKEYBYTES];
+    uint8_t server_secret_key[NEXT_SECRET_KEY_BYTES];    
 
     NEXT_DECLARE_SENTINEL(6)
 
@@ -1879,7 +1880,7 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
 
         uint8_t * buffer = packet_data + begin;
         next_route_token_t route_token;
-        if ( next_read_encrypted_route_token( &buffer, &route_token, next_relay_backend_public_key, server->server_route_private_key ) != NEXT_OK )
+        if ( next_read_encrypted_route_token( &buffer, &route_token, server->server_secret_key ) != NEXT_OK )
         {
             next_printf( NEXT_LOG_LEVEL_DEBUG, "server ignored route request packet. bad route" );
             return;
@@ -1960,7 +1961,7 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
 
         uint8_t * buffer = packet_data + begin;
         next_continue_token_t continue_token;
-        if ( next_read_encrypted_continue_token( &buffer, &continue_token, next_relay_backend_public_key, server->server_route_private_key ) != NEXT_OK )
+        if ( next_read_encrypted_continue_token( &buffer, &continue_token, server->server_secret_key ) != NEXT_OK )
         {
             next_printf( NEXT_LOG_LEVEL_DEBUG, "server ignored continue request packet from relay. bad token" );
             return;

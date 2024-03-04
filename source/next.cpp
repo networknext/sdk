@@ -36,7 +36,6 @@
 #include "next_ping_history.h"
 #include "next_upgrade_token.h"
 #include "next_route_token.h"
-#include "next_continue_token.h"
 #include "next_header.h"
 #include "next_packet_filter.h"
 #include "next_bandwidth_limiter.h"

@@ -41,11 +41,11 @@ void next_route_manager_fallback_to_direct( next_route_manager_t * route_manager
 
 void next_route_manager_direct_route( next_route_manager_t * route_manager, bool quiet );
 
-void next_route_manager_begin_next_route( next_route_manager_t * route_manager, int num_tokens, uint8_t * tokens, const uint8_t * public_key, const uint8_t * private_key, const uint8_t * magic, const next_address_t * client_external_address );
+void next_route_manager_begin_next_route( next_route_manager_t * route_manager, int num_tokens, uint8_t * tokens, const uint8_t * client_secret_key, const uint8_t * magic, const next_address_t * client_external_address );
 
-void next_route_manager_continue_next_route( next_route_manager_t * route_manager, int num_tokens, uint8_t * tokens, const uint8_t * public_key, const uint8_t * private_key, const uint8_t * magic, const next_address_t * client_external_address );
+void next_route_manager_continue_next_route( next_route_manager_t * route_manager, int num_tokens, uint8_t * tokens, const uint8_t * client_secret_key, const uint8_t * magic, const next_address_t * client_external_address );
 
-void next_route_manager_update( next_route_manager_t * route_manager, int update_type, int num_tokens, uint8_t * tokens, const uint8_t * public_key, const uint8_t * private_key, const uint8_t * magic, const next_address_t * client_external_address );
+void next_route_manager_update( next_route_manager_t * route_manager, int update_type, int num_tokens, uint8_t * tokens, const uint8_t * client_secret_key, const uint8_t * magic, const next_address_t * client_external_address );
 
 bool next_route_manager_has_network_next_route( next_route_manager_t * route_manager );
 
