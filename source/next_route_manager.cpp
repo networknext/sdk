@@ -253,8 +253,8 @@ void next_route_manager_begin_next_route( next_route_manager_t * route_manager, 
     route_manager->route_data.pending_route_start_time = next_platform_time();
     route_manager->route_data.pending_route_last_send_time = -1000.0;
     route_manager->route_data.pending_route_next_address.type = NEXT_ADDRESS_IPV4;
-    route_manager->route_data.pending_route_next_address.data.ip = route_token.next_address.data.ip;
-    route_manager->route_data.pending_route_next_address.port = route_token.next_address.port;
+    route_manager->route_data.pending_route_next_address.data.ip = route_token.next_address;
+    route_manager->route_data.pending_route_next_address.port = route_token.next_port;
     route_manager->route_data.pending_route_session_id = route_token.session_id;
     route_manager->route_data.pending_route_session_version = route_token.session_version;
     route_manager->route_data.pending_route_kbps_up = route_token.kbps_up;
