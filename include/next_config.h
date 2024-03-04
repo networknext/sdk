@@ -181,8 +181,6 @@
 
 #define NEXT_CLIENT_ROUTE_UPDATE_TIMEOUT                               15
 
-#define NEXT_MAX_SESSION_DEBUG                                       1024
-
 #define NEXT_NEAR_RELAY_PINGS_PER_SECOND                                2
 
 #define NEXT_IPV4_HEADER_BYTES                                         20

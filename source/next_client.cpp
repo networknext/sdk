@@ -1348,11 +1348,6 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
         {
             next_printf( NEXT_LOG_LEVEL_DEBUG, "client received route update packet from server" );
 
-            if ( packet.has_debug )
-            {
-                next_printf( NEXT_LOG_LEVEL_NONE, "--------------------------------------\n%s--------------------------------------", packet.debug );
-            }
-
             // todo: near relays in another packet
             /*
             if ( packet.has_near_relays )

@@ -4054,8 +4054,6 @@ void test_session_response_packet_direct_has_near_relays()
         {
             in.session_data_signature[j] = uint8_t(j);
         }
-        in.has_debug = true;
-        strcpy( in.debug, "hello session" );
 
         int packet_bytes = 0;
         next_check( next_write_backend_packet( NEXT_BACKEND_SESSION_UPDATE_RESPONSE_PACKET, &in, packet_data, &packet_bytes, next_signed_packets, private_key, magic, from_address, 4, to_address, 4 ) == NEXT_OK );
@@ -4088,8 +4086,6 @@ void test_session_response_packet_direct_has_near_relays()
         */
 
         next_check( in.response_type == out.response_type );
-        next_check( in.has_debug == out.has_debug );
-        next_check( strcmp( in.debug, out.debug ) == 0 );
         next_check( in.session_data_bytes == out.session_data_bytes );
         for ( int j = 0; j < NEXT_MAX_SESSION_DATA_BYTES; ++j )
         {

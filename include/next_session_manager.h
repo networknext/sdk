@@ -232,16 +232,11 @@ struct next_session_entry_t
 
     NEXT_DECLARE_SENTINEL(28)
 
-    bool has_debug;
-    char debug[NEXT_MAX_SESSION_DEBUG];
-
-    NEXT_DECLARE_SENTINEL(29)
-
     uint32_t session_flush_update_sequence;
     bool session_update_flush;
     bool session_update_flush_finished;
 
-    NEXT_DECLARE_SENTINEL(30)
+    NEXT_DECLARE_SENTINEL(29)
 
     int num_held_near_relays;
     uint64_t held_near_relay_ids[NEXT_MAX_NEAR_RELAYS];
@@ -249,7 +244,7 @@ struct next_session_entry_t
     uint8_t held_near_relay_jitter[NEXT_MAX_NEAR_RELAYS];
     float held_near_relay_packet_loss[NEXT_MAX_NEAR_RELAYS];
 
-    NEXT_DECLARE_SENTINEL(31)
+    NEXT_DECLARE_SENTINEL(30)
 };
 
 inline void next_session_entry_initialize_sentinels( next_session_entry_t * entry )
@@ -287,7 +282,6 @@ inline void next_session_entry_initialize_sentinels( next_session_entry_t * entr
     NEXT_INITIALIZE_SENTINEL( entry, 28 )
     NEXT_INITIALIZE_SENTINEL( entry, 29 )
     NEXT_INITIALIZE_SENTINEL( entry, 30 )
-    NEXT_INITIALIZE_SENTINEL( entry, 31 )
     next_replay_protection_initialize_sentinels( &entry->payload_replay_protection );
     next_replay_protection_initialize_sentinels( &entry->special_replay_protection );
     next_replay_protection_initialize_sentinels( &entry->internal_replay_protection );
@@ -331,7 +325,6 @@ inline void next_session_entry_verify_sentinels( next_session_entry_t * entry )
     NEXT_VERIFY_SENTINEL( entry, 28 )
     NEXT_VERIFY_SENTINEL( entry, 29 )
     NEXT_VERIFY_SENTINEL( entry, 30 )
-    NEXT_VERIFY_SENTINEL( entry, 31 )
     next_replay_protection_verify_sentinels( &entry->payload_replay_protection );
     next_replay_protection_verify_sentinels( &entry->special_replay_protection );
     next_replay_protection_verify_sentinels( &entry->internal_replay_protection );

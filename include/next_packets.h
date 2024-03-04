@@ -249,8 +249,6 @@ struct NextRouteUpdatePacket
     uint64_t packets_lost_client_to_server;
     uint64_t packets_out_of_order_client_to_server;
     float jitter_client_to_server;
-    bool has_debug;
-    char debug[NEXT_MAX_SESSION_DEBUG];
     uint8_t upcoming_magic[8];
     uint8_t current_magic[8];
     uint8_t previous_magic[8];
@@ -312,12 +310,6 @@ struct NextRouteUpdatePacket
         serialize_uint64( stream, packets_out_of_order_client_to_server );
 
         serialize_float( stream, jitter_client_to_server );
-
-        serialize_bool( stream, has_debug );
-        if ( has_debug )
-        {
-            serialize_string( stream, debug, NEXT_MAX_SESSION_DEBUG );
-        }
 
         serialize_bytes( stream, upcoming_magic, 8 );
         serialize_bytes( stream, current_magic, 8 );
@@ -681,8 +673,6 @@ struct NextBackendSessionUpdateResponsePacket
     int num_tokens;
     uint8_t tokens[NEXT_MAX_TOKENS*NEXT_ENCRYPTED_ROUTE_TOKEN_BYTES];
     bool multipath;
-    bool has_debug;
-    char debug[NEXT_MAX_SESSION_DEBUG];
 
     NextBackendSessionUpdateResponsePacket()
     {
@@ -734,12 +724,6 @@ struct NextBackendSessionUpdateResponsePacket
         if ( response_type == NEXT_UPDATE_TYPE_CONTINUE )
         {
             serialize_bytes( stream, tokens, num_tokens * NEXT_ENCRYPTED_CONTINUE_TOKEN_BYTES );
-        }
-
-        serialize_bool( stream, has_debug );
-        if ( has_debug )
-        {
-            serialize_string( stream, debug, NEXT_MAX_SESSION_DEBUG );
         }
 
         return true;

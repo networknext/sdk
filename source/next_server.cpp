@@ -1027,9 +1027,6 @@ void next_server_internal_update_route( next_server_internal_t * server )
                 packet.packets_sent_server_to_client = entry->stats_packets_sent_server_to_client;
             }
 
-            packet.has_debug = entry->has_debug;
-            memcpy( packet.debug, entry->debug, NEXT_MAX_SESSION_DEBUG );
-
             next_server_internal_send_packet( server, &entry->address, NEXT_ROUTE_UPDATE_PACKET, &packet );
 
             entry->update_last_send_time = current_time;
@@ -1658,9 +1655,6 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
                 memcpy( entry->previous_route_private_key, entry->current_route_private_key, NEXT_CRYPTO_BOX_SECRETKEYBYTES );
             }
         }
-
-        entry->has_debug = packet.has_debug;
-        memcpy( entry->debug, packet.debug, NEXT_MAX_SESSION_DEBUG );
 
         if ( entry->previous_session_events != 0 )
         {   
