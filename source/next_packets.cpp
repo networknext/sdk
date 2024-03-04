@@ -59,7 +59,6 @@ int next_write_route_request_packet( uint8_t * packet_data, const uint8_t * toke
 {
     next_assert( packet_data );
     next_assert( token_data );
-    next_assert( token_bytes > 0 );
     next_assert( magic );
     next_assert( from_address );
     next_assert( to_address );
@@ -81,7 +80,6 @@ int next_write_continue_request_packet( uint8_t * packet_data, const uint8_t * t
 {
     next_assert( packet_data );
     next_assert( token_data );
-    next_assert( token_bytes > 0 );
     next_assert( magic );
     next_assert( from_address );
     next_assert( to_address );
@@ -277,7 +275,7 @@ int next_write_client_ping_packet( uint8_t * packet_data, const uint8_t * ping_t
 
 int next_write_client_pong_packet( uint8_t * packet_data, uint64_t ping_sequence, uint64_t session_id, const uint8_t * magic, const uint8_t * from_address, const uint8_t * to_address )
 {
-    packet_data[0] = NEXT_CLIENT_PING_PACKET;
+    packet_data[0] = NEXT_CLIENT_PONG_PACKET;
     uint8_t * a = packet_data + 1;
     uint8_t * b = packet_data + 3;
     uint8_t * p = packet_data + 18;
