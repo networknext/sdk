@@ -23,6 +23,8 @@
 #ifndef NEXT_TESTS_H
 #define NEXT_TESTS_H
 
-void next_run_tests();
+#include "next.h"
+
+NEXT_EXPORT_FUNC void next_run_tests();
 
 #endif // #ifndef NEXT_TESTS_H
