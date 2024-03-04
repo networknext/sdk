@@ -252,9 +252,9 @@ void next_route_manager_begin_next_route( next_route_manager_t * route_manager, 
     route_manager->route_data.pending_route = true;
     route_manager->route_data.pending_route_start_time = next_platform_time();
     route_manager->route_data.pending_route_last_send_time = -1000.0;
-    // todo: fix up address
-    // route_manager->route_data.pending_route_next_address = htonl( route_token.next_address.data.ip );
-//    route_manager->route_data.pending_route_next_port = htons( route_token.next_address.port );
+    route_manager->route_data.pending_route_next_address.type = NEXT_ADDRESS_IPV4;
+    route_manager->route_data.pending_route_next_address.data.ip = route_token.next_address.data.ip;
+    route_manager->route_data.pending_route_next_address.port = route_token.next_address.port;
     route_manager->route_data.pending_route_session_id = route_token.session_id;
     route_manager->route_data.pending_route_session_version = route_token.session_version;
     route_manager->route_data.pending_route_kbps_up = route_token.kbps_up;
@@ -270,8 +270,7 @@ void next_route_manager_begin_next_route( next_route_manager_t * route_manager, 
     uint8_t to_address_data[4];
 
     next_address_data( client_external_address, from_address_data );
-    // todo: fix up
-    //    next_address_data( &route_token.next_address, to_address_data );
+    memcpy( to_address_data, &route_token.next_address, 4 );
 
     route_manager->route_data.pending_route_request_packet_bytes = next_write_route_request_packet( route_manager->route_data.pending_route_request_packet_data, token_data, token_bytes, magic, from_address_data, to_address_data );
 
@@ -368,10 +367,7 @@ void next_route_manager_update( next_route_manager_t * route_manager, int update
     }
     else if ( update_type == NEXT_UPDATE_TYPE_CONTINUE )
     {
-        // todo: secret key
-        /*
-        next_route_manager_continue_next_route( route_manager, num_tokens, tokens, public_key, private_key, magic, client_external_address );
-        */
+        next_route_manager_continue_next_route( route_manager, num_tokens, tokens, client_secret_key, magic, client_external_address );
     }
 }
 

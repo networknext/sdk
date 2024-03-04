@@ -643,7 +643,6 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
         {
             uint8_t magic[8];
             memset( magic, 0, sizeof(magic) );
-            // todo: need to update in backend to match this
             memset( to_address_data, 0, sizeof(to_address_data) );
             if ( !next_advanced_packet_filter( packet_data, magic, from_address_data, to_address_data, packet_bytes ) )
             {
@@ -1198,7 +1197,6 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
             return;
         }
 
-        // todo: special replay protection. check what is done vs. regular, and does it have consequences for the relay
         if ( next_replay_protection_already_received( &client->special_replay_protection, payload_sequence ) )
             return;
 
@@ -1322,29 +1320,6 @@ void next_client_internal_process_network_next_packet( next_client_internal_t * 
         if ( packet.sequence > client->route_update_sequence )
         {
             next_printf( NEXT_LOG_LEVEL_DEBUG, "client received route update packet from server" );
-
-            // todo: near relays in another packet
-            /*
-            if ( packet.has_near_relays )
-            {
-                // enable near relay pings
-
-                next_printf( NEXT_LOG_LEVEL_INFO, "client pinging %d near relays", packet.num_near_relays );
-
-                next_relay_manager_update( client->near_relay_manager, packet.num_near_relays, packet.near_relay_ids, packet.near_relay_addresses, packet.near_relay_ping_tokens, packet.near_relay_expire_timestamp );
-            }
-            else
-            {
-                // disable near relay pings (and clear any ping data)
-                
-                if ( client->near_relay_manager->num_relays != 0 )
-                {
-                    next_printf( NEXT_LOG_LEVEL_INFO, "client near relay pings completed" );
-                
-                    next_relay_manager_update( client->near_relay_manager, 0, packet.near_relay_ids, packet.near_relay_addresses, NULL, 0 );
-                }
-            }
-            */
 
             {
                 next_platform_mutex_guard( &client->route_manager_mutex );

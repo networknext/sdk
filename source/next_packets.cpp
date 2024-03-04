@@ -614,8 +614,6 @@ int next_read_packet( uint8_t packet_id, uint8_t * packet_data, int begin, int e
 
 void next_post_validate_packet( uint8_t packet_id, const int * encrypted_packet, uint64_t * sequence, next_replay_protection_t * replay_protection )
 {
-    // todo: look into this. what about the non-payload packets with sequences?
-    
     const bool payload_packet = next_is_payload_packet( packet_id );
 
     if ( payload_packet && encrypted_packet && encrypted_packet[packet_id] )

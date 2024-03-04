@@ -2403,7 +2403,7 @@ void test_direct_ping_packet()
         next_crypto_random_bytes( from_address, 4 );
         next_crypto_random_bytes( to_address, 4 );
 
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint64_t in_sequence = i;
@@ -2417,7 +2417,7 @@ void test_direct_ping_packet()
         int result = next_write_packet( NEXT_DIRECT_PING_PACKET, &in, packet_data, &packet_bytes, next_signed_packets, next_encrypted_packets, &in_sequence, NULL, private_key, magic, from_address, to_address );
 
         next_check( result == NEXT_OK );
-        next_check( packet_bytes == 18 + 8 + 8 + NEXT_CRYPTO_AEAD_CHACHA20POLY1305_ABYTES );    // todo: crypto update
+        next_check( packet_bytes == 18 + 8 + 8 + 16 );
 
         next_check( next_basic_packet_filter( packet_data, packet_bytes ) );
         next_check( next_advanced_packet_filter( packet_data, magic, from_address, to_address, packet_bytes ) );
@@ -2449,7 +2449,7 @@ void test_direct_pong_packet()
         next_crypto_random_bytes( from_address, 4 );
         next_crypto_random_bytes( to_address, 4 );
 
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint64_t in_sequence = i;
@@ -2463,7 +2463,7 @@ void test_direct_pong_packet()
         int result = next_write_packet( NEXT_DIRECT_PONG_PACKET, &in, packet_data, &packet_bytes, next_signed_packets, next_encrypted_packets, &in_sequence, NULL, private_key, magic, from_address, to_address );
 
         next_check( result == NEXT_OK );
-        next_check( packet_bytes == 18 + 8 + 8 + NEXT_CRYPTO_AEAD_CHACHA20POLY1305_ABYTES );    // todo: crypto update
+        next_check( packet_bytes == 18 + 8 + 8 + 16 );
 
         next_check( next_basic_packet_filter( packet_data, packet_bytes ) );
         next_check( next_advanced_packet_filter( packet_data, magic, from_address, to_address, packet_bytes ) );
@@ -2673,7 +2673,7 @@ void test_route_response_packet()
         uint64_t send_sequence = i + 1000;
         uint64_t session_id = 0x12314141LL;
         uint8_t session_version = uint8_t(i%256);
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         int packet_bytes = next_write_route_response_packet( packet_data, send_sequence, session_id, session_version, private_key, magic, from_address, to_address );
@@ -2716,7 +2716,7 @@ void test_client_to_server_packet()
         uint64_t send_sequence = i + 1000;
         uint64_t session_id = 0x12314141LL;
         uint8_t session_version = uint8_t(i%256);
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t game_packet_data[NEXT_MTU];
@@ -2763,7 +2763,7 @@ void test_server_to_client_packet()
         uint64_t send_sequence = i + 1000;
         uint64_t session_id = 0x12314141LL;
         uint8_t session_version = uint8_t(i%256);
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t game_packet_data[NEXT_MTU];
@@ -2812,7 +2812,7 @@ void test_session_ping_packet()
         uint64_t send_sequence = i + 1000;
         uint64_t session_id = 0x12314141LL;
         uint8_t session_version = uint8_t(i%256);
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];        // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint64_t ping_sequence = i;
@@ -2856,7 +2856,7 @@ void test_session_pong_packet()
         uint64_t send_sequence = i + 1000;
         uint64_t session_id = 0x12314141LL;
         uint8_t session_version = uint8_t(i%256);
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
 
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
@@ -2925,7 +2925,7 @@ void test_continue_response_packet()
         uint64_t send_sequence = i + 1000;
         uint64_t session_id = 0x12314141LL;
         uint8_t session_version = uint8_t(i%256);
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         int packet_bytes = next_write_continue_response_packet( packet_data, send_sequence, session_id, session_version, private_key, magic, from_address, to_address );
@@ -2958,7 +2958,7 @@ void test_client_stats_packet_with_near_relays()
     uint64_t iterations = 100;
     for ( uint64_t i = 0; i < iterations; ++i )
     {
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES];    // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t magic[8];
@@ -3039,7 +3039,7 @@ void test_client_stats_packet_without_near_relays()
     uint64_t iterations = 100;
     for ( uint64_t i = 0; i < iterations; ++i )
     {
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES]; // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t magic[8];
@@ -3106,7 +3106,7 @@ void test_route_update_packet_direct()
     uint64_t iterations = 100;
     for ( uint64_t i = 0; i < iterations; ++i )
     {
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES]; // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t magic[8];
@@ -3165,7 +3165,7 @@ void test_route_update_packet_new_route()
     uint64_t iterations = 100;
     for ( uint64_t i = 0; i < iterations; ++i )
     {
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES]; // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t magic[8];
@@ -3229,7 +3229,7 @@ void test_route_update_packet_continue_route()
     uint64_t iterations = 100;
     for ( uint64_t i = 0; i < iterations; ++i )
     {
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES]; // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t magic[8];
@@ -3284,7 +3284,7 @@ void test_route_update_ack_packet()
     uint64_t iterations = 100;
     for ( uint64_t i = 0; i < iterations; ++i )
     {
-        uint8_t private_key[NEXT_CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES]; // todo: crypto update
+        uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
 
         uint8_t magic[8];
@@ -4098,7 +4098,6 @@ void next_run_tests()
         RUN_TEST( test_route_update_ack_packet );
         RUN_TEST( test_client_ping_packet );
         RUN_TEST( test_client_pong_packet );
-        // todo: server_ping/pong_packet
         RUN_TEST( test_server_init_request_packet );
         RUN_TEST( test_server_init_response_packet );
         RUN_TEST( test_server_update_packet );

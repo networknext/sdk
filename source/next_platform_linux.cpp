@@ -343,8 +343,6 @@ next_platform_socket_t * next_platform_socket_create( void * context, next_addre
         // blocking with no timeout
     }
 
-    // todo: packet tagging on linux
-
     return socket;
 }
 

@@ -27,9 +27,6 @@
 #include "next_crypto.h"
 #include "next_read_write.h"
 
-// todo: crypto wrap
-#include <sodium.h>
-
 struct next_route_token_t
 {
     uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
@@ -74,8 +71,7 @@ inline int next_decrypt_route_token( const uint8_t * key, const uint8_t * nonce,
     next_assert( key );
     next_assert( buffer );
     unsigned long long decrypted_len;
-    // todo: crypto_* wrap
-    if ( crypto_aead_xchacha20poly1305_ietf_decrypt( decrypted, &decrypted_len, NULL, buffer, NEXT_ROUTE_TOKEN_BYTES + crypto_aead_xchacha20poly1305_ietf_ABYTES, NULL, 0, nonce, key ) != 0 )
+    if ( next_crypto_aead_xchacha20poly1305_ietf_decrypt( decrypted, &decrypted_len, NULL, buffer, NEXT_ROUTE_TOKEN_BYTES + 16, NULL, 0, nonce, key ) != 0 )
     {
         return NEXT_ERROR;
     }

@@ -53,7 +53,7 @@
 
 #define NEXT_MTU                                               1200
 
-#define NEXT_MAX_PACKET_BYTES                                  1384     // todo: this must be set in the backend too
+#define NEXT_MAX_PACKET_BYTES                                  1384
 
 #define NEXT_OK                                                   0
 #define NEXT_ERROR                                               -1

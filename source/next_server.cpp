@@ -834,14 +834,13 @@ int next_server_internal_send_packet( next_server_internal_t * server, const nex
     next_address_data( &server->server_address, from_address_data );
 
     // IMPORTANT: when the upgrade request packet is sent, the client doesn't know it's external address yet
-    // so we must encode with a to address of [0,0,0,0]
+    // so we encode with a to address of [0,0,0,0]
     if ( packet_id != NEXT_UPGRADE_REQUEST_PACKET )
     {
         next_address_data( to_address, to_address_data );
     }
     else
     {
-        // todo: the backend needs to be updated to support this
         memset( to_address_data, 0, sizeof(to_address_data) );
     }
 
@@ -900,7 +899,6 @@ next_session_entry_t * next_server_internal_process_client_to_server_packet( nex
 
     next_assert( packet_type == NEXT_CLIENT_TO_SERVER_PACKET || packet_type == NEXT_SESSION_PING_PACKET );
 
-    // todo: check how special replay protection is used
     next_replay_protection_t * replay_protection = ( packet_type == NEXT_CLIENT_TO_SERVER_PACKET ) ? &entry->payload_replay_protection : &entry->special_replay_protection;
 
     if ( next_replay_protection_already_received( replay_protection, packet_sequence ) )
@@ -997,19 +995,6 @@ void next_server_internal_update_route( next_server_internal_t * server )
             memcpy( packet.current_magic, server->current_magic, 8 );
             memcpy( packet.previous_magic, server->previous_magic, 8 );
             packet.sequence = entry->update_sequence;
-
-            // todo: near relays need to go into another packet
-            /*
-            packet.has_near_relays = entry->update_has_near_relays;
-            if ( packet.has_near_relays )
-            {
-                packet.num_near_relays = entry->update_num_near_relays;
-                memcpy( packet.near_relay_ids, entry->update_near_relay_ids, size_t(8) * entry->update_num_near_relays );
-                memcpy( packet.near_relay_addresses, entry->update_near_relay_addresses, sizeof(next_address_t) * entry->update_num_near_relays );
-                memcpy( packet.near_relay_ping_tokens, entry->update_near_relay_ping_tokens, NEXT_MAX_NEAR_RELAYS * NEXT_PING_TOKEN_BYTES );
-                packet.near_relay_expire_timestamp = entry->update_near_relay_expire_timestamp;
-            }
-            */
 
             packet.update_type = entry->update_type;
             packet.multipath = entry->multipath;
@@ -1615,19 +1600,6 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
         {
             memcpy( entry->update_tokens, packet.tokens, NEXT_ENCRYPTED_CONTINUE_TOKEN_BYTES * size_t(packet.num_tokens) );
         }
-
-        // todo: move into another packet type
-        /*
-        entry->update_has_near_relays = packet.has_near_relays;
-        if ( packet.has_near_relays )
-        {
-            entry->update_num_near_relays = packet.num_near_relays;
-            memcpy( entry->update_near_relay_ids, packet.near_relay_ids, 8 * size_t(packet.num_near_relays) );
-            memcpy( entry->update_near_relay_addresses, packet.near_relay_addresses, sizeof(next_address_t) * size_t(packet.num_near_relays) );
-            memcpy( entry->update_near_relay_ping_tokens, packet.near_relay_ping_tokens, packet.num_near_relays * NEXT_PING_TOKEN_BYTES );
-            entry->update_near_relay_expire_timestamp = packet.near_relay_expire_timestamp;
-        }
-        */
 
         entry->update_last_send_time = -1000.0;
 

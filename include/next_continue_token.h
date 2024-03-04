@@ -26,8 +26,6 @@
 #include "next.h"
 #include "next_crypto.h"
 
-#include <sodium.h> // todo: crypto
-
 struct next_continue_token_t
 {
     uint64_t expire_timestamp;
@@ -54,8 +52,7 @@ inline int next_decrypt_continue_token( const uint8_t * key, const uint8_t * non
     next_assert( key );
     next_assert( buffer );
     unsigned long long decrypted_len;
-    // todo: crypto_* wrap
-    if ( crypto_aead_xchacha20poly1305_ietf_decrypt( decrypted, &decrypted_len, NULL, buffer, NEXT_ROUTE_TOKEN_BYTES + crypto_aead_xchacha20poly1305_ietf_ABYTES, NULL, 0, nonce, key ) != 0 )
+    if ( next_crypto_aead_xchacha20poly1305_ietf_decrypt( decrypted, &decrypted_len, NULL, buffer, NEXT_ROUTE_TOKEN_BYTES + 16, NULL, 0, nonce, key ) != 0 )
     {
         return NEXT_ERROR;
     }
