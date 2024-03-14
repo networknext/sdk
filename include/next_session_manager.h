@@ -420,7 +420,7 @@ inline bool next_session_manager_expand( next_session_manager_t * session_manage
 
     memset( new_session_ids, 0, size_t(new_size) * 8 );
     memset( new_addresses, 0, size_t(new_size) * sizeof(next_address_t) );
-    memset( new_entries, 0, size_t(new_size) * sizeof(next_session_entry_t) );
+    memset( (char*) new_entries, 0, size_t(new_size) * sizeof(next_session_entry_t) );
 
     int index = 0;
     const int current_size = session_manager->size;
