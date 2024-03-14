@@ -81,6 +81,8 @@ inline int next_read_header( int packet_type, uint64_t * sequence, uint64_t * se
     next_assert( header );
     next_assert( header_length >= NEXT_HEADER_BYTES );
 
+    (void) header_length;
+
     struct header_data data;
 
     memcpy( data.session_private_key, private_key, NEXT_SESSION_PRIVATE_KEY_BYTES );
