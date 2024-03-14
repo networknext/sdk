@@ -1143,7 +1143,7 @@ void next_server_internal_update_server_relays( next_server_internal_t * server 
         {
             next_printf( NEXT_LOG_LEVEL_WARN, "server timed out requesting server relays" );
 
-            memset( &server->server_relay_response_packet, 0, sizeof(NextBackendServerRelayResponsePacket) );
+            memset( (char*) &server->server_relay_response_packet, 0, sizeof(NextBackendServerRelayResponsePacket) );
             server->next_server_relay_request_packet_send_time = current_time + NEXT_SERVER_RELAYS_UPDATE_TIME_BASE + ( rand() % NEXT_SERVER_RELAYS_UPDATE_TIME_VARIATION );
             server->requesting_server_relays = false;
 
@@ -1296,7 +1296,7 @@ void next_server_internal_update_client_relays( next_server_internal_t * server 
             {
                 next_printf( NEXT_LOG_LEVEL_WARN, "server timed out requesting client relays for session %" PRIx64, entry->session_id );
 
-                memset( &entry->client_relay_response_packet, 0, sizeof(NextBackendClientRelayResponsePacket) );
+                memset( (char*) &entry->client_relay_response_packet, 0, sizeof(NextBackendClientRelayResponsePacket) );
                 entry->next_client_relay_request_packet_send_time = current_time + NEXT_CLIENT_RELAYS_UPDATE_TIME_BASE + ( rand() % NEXT_CLIENT_RELAYS_UPDATE_TIME_VARIATION );
                 entry->requesting_client_relays = false;
 
