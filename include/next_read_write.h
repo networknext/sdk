@@ -267,7 +267,7 @@ inline void next_write_address_ipv4( uint8_t ** buffer, const next_address_t * a
 
     (void) start;
 
-    next_assert( *buffer - start == NEXT_ADDRESS_IPV4_BYTES );
+    next_assert( *buffer - start == 6 );
 }
 
 inline void next_read_address_ipv4( const uint8_t ** buffer, next_address_t * address )
@@ -286,7 +286,7 @@ inline void next_read_address_ipv4( const uint8_t ** buffer, next_address_t * ad
 
     (void) start;
 
-    next_assert( *buffer - start == NEXT_ADDRESS_IPV4_BYTES );
+    next_assert( *buffer - start == 6 );
 }
 
 // ---------------------------------------------------------------------

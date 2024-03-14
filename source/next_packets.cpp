@@ -289,6 +289,38 @@ int next_write_client_pong_packet( uint8_t * packet_data, uint64_t ping_sequence
     return packet_length;
 }
 
+int next_write_server_ping_packet( uint8_t * packet_data, const uint8_t * ping_token, uint64_t ping_sequence, uint64_t expire_timestamp, const uint8_t * magic, const uint8_t * from_address, const uint8_t * to_address )
+{
+    packet_data[0] = NEXT_SERVER_PING_PACKET;
+    uint8_t * a = packet_data + 1;
+    uint8_t * b = packet_data + 3;
+    uint8_t * p = packet_data + 18;
+
+    next_write_uint64( &p, ping_sequence );
+    next_write_uint64( &p, expire_timestamp );
+    next_write_bytes( &p, ping_token, NEXT_PING_TOKEN_BYTES );
+
+    int packet_length = p - packet_data;
+    next_generate_pittle( a, from_address, to_address, packet_length );
+    next_generate_chonkle( b, magic, from_address, to_address, packet_length );
+    return packet_length;
+}
+
+int next_write_server_pong_packet( uint8_t * packet_data, uint64_t ping_sequence, const uint8_t * magic, const uint8_t * from_address, const uint8_t * to_address )
+{
+    packet_data[0] = NEXT_SERVER_PONG_PACKET;
+    uint8_t * a = packet_data + 1;
+    uint8_t * b = packet_data + 3;
+    uint8_t * p = packet_data + 18;
+
+    next_write_uint64( &p, ping_sequence );
+
+    int packet_length = p - packet_data;
+    next_generate_pittle( a, from_address, to_address, packet_length );
+    next_generate_chonkle( b, magic, from_address, to_address, packet_length );
+    return packet_length;
+}
+
 int next_write_packet( uint8_t packet_id, void * packet_object, uint8_t * packet_data, int * packet_bytes, const int * signed_packet, const int * encrypted_packet, uint64_t * sequence, const uint8_t * sign_private_key, const uint8_t * encrypt_private_key, const uint8_t * magic, const uint8_t * from_address, const uint8_t * to_address )
 {
     next_assert( packet_object );
@@ -393,12 +425,34 @@ int next_write_packet( uint8_t packet_id, void * packet_object, uint8_t * packet
         }
         break;
 
-        case NEXT_ROUTE_UPDATE_ACK_PACKET:
+        case NEXT_ROUTE_ACK_PACKET:
         {
-            NextRouteUpdateAckPacket * packet = (NextRouteUpdateAckPacket*) packet_object;
+            NextRouteAckPacket * packet = (NextRouteAckPacket*) packet_object;
             if ( !packet->Serialize( stream ) )
             {
-                next_printf( NEXT_LOG_LEVEL_DEBUG, "failed to write route update ack packet" );
+                next_printf( NEXT_LOG_LEVEL_DEBUG, "failed to write route ack packet" );
+                return NEXT_ERROR;
+            }
+        }
+        break;
+
+        case NEXT_CLIENT_RELAY_UPDATE_PACKET:
+        {
+            NextClientRelayUpdatePacket * packet = (NextClientRelayUpdatePacket*) packet_object;
+            if ( !packet->Serialize( stream ) )
+            {
+                next_printf( NEXT_LOG_LEVEL_DEBUG, "failed to write client relay update packet" );
+                return NEXT_ERROR;
+            }
+        }
+        break;
+
+        case NEXT_CLIENT_RELAY_ACK_PACKET:
+        {
+            NextClientRelayAckPacket * packet = (NextClientRelayAckPacket*) packet_object;
+            if ( !packet->Serialize( stream ) )
+            {
+                next_printf( NEXT_LOG_LEVEL_DEBUG, "failed to write client relay ack packet" );
                 return NEXT_ERROR;
             }
         }
@@ -597,9 +651,25 @@ int next_read_packet( uint8_t packet_id, uint8_t * packet_data, int begin, int e
         }
         break;
 
-        case NEXT_ROUTE_UPDATE_ACK_PACKET:
+        case NEXT_ROUTE_ACK_PACKET:
         {
-            NextRouteUpdateAckPacket * packet = (NextRouteUpdateAckPacket*) packet_object;
+            NextRouteAckPacket * packet = (NextRouteAckPacket*) packet_object;
+            if ( !packet->Serialize( stream ) )
+                return NEXT_ERROR;
+        }
+        break;
+
+        case NEXT_CLIENT_RELAY_UPDATE_PACKET:
+        {
+            NextClientRelayUpdatePacket * packet = (NextClientRelayUpdatePacket*) packet_object;
+            if ( !packet->Serialize( stream ) )
+                return NEXT_ERROR;
+        }
+        break;
+
+        case NEXT_CLIENT_RELAY_ACK_PACKET:
+        {
+            NextClientRelayAckPacket * packet = (NextClientRelayAckPacket*) packet_object;
             if ( !packet->Serialize( stream ) )
                 return NEXT_ERROR;
         }
@@ -685,6 +755,38 @@ int next_write_backend_packet( uint8_t packet_id, void * packet_object, uint8_t 
         case NEXT_BACKEND_SESSION_UPDATE_RESPONSE_PACKET:
         {
             NextBackendSessionUpdateResponsePacket * packet = (NextBackendSessionUpdateResponsePacket*) packet_object;
+            if ( !packet->Serialize( stream ) )
+                return NEXT_ERROR;
+        }
+        break;
+
+        case NEXT_BACKEND_CLIENT_RELAY_REQUEST_PACKET:
+        {
+            NextBackendClientRelayRequestPacket * packet = (NextBackendClientRelayRequestPacket*) packet_object;
+            if ( !packet->Serialize( stream ) )
+                return NEXT_ERROR;
+        }
+        break;
+
+        case NEXT_BACKEND_CLIENT_RELAY_RESPONSE_PACKET:
+        {
+            NextBackendClientRelayResponsePacket * packet = (NextBackendClientRelayResponsePacket*) packet_object;
+            if ( !packet->Serialize( stream ) )
+                return NEXT_ERROR;
+        }
+        break;
+
+        case NEXT_BACKEND_SERVER_RELAY_REQUEST_PACKET:
+        {
+            NextBackendServerRelayRequestPacket * packet = (NextBackendServerRelayRequestPacket*) packet_object;
+            if ( !packet->Serialize( stream ) )
+                return NEXT_ERROR;
+        }
+        break;
+
+        case NEXT_BACKEND_SERVER_RELAY_RESPONSE_PACKET:
+        {
+            NextBackendServerRelayResponsePacket * packet = (NextBackendServerRelayResponsePacket*) packet_object;
             if ( !packet->Serialize( stream ) )
                 return NEXT_ERROR;
         }
@@ -781,6 +883,38 @@ int next_read_backend_packet( uint8_t packet_id, uint8_t * packet_data, int begi
         case NEXT_BACKEND_SERVER_UPDATE_RESPONSE_PACKET:
         {
             NextBackendServerUpdateResponsePacket * packet = (NextBackendServerUpdateResponsePacket*) packet_object;
+            if ( !packet->Serialize( stream ) )
+                return NEXT_ERROR;
+        }
+        break;
+
+        case NEXT_BACKEND_CLIENT_RELAY_REQUEST_PACKET:
+        {
+            NextBackendClientRelayRequestPacket * packet = (NextBackendClientRelayRequestPacket*) packet_object;
+            if ( !packet->Serialize( stream ) )
+                return NEXT_ERROR;
+        }
+        break;
+
+        case NEXT_BACKEND_CLIENT_RELAY_RESPONSE_PACKET:
+        {
+            NextBackendClientRelayResponsePacket * packet = (NextBackendClientRelayResponsePacket*) packet_object;
+            if ( !packet->Serialize( stream ) )
+                return NEXT_ERROR;
+        }
+        break;
+
+        case NEXT_BACKEND_SERVER_RELAY_REQUEST_PACKET:
+        {
+            NextBackendServerRelayRequestPacket * packet = (NextBackendServerRelayRequestPacket*) packet_object;
+            if ( !packet->Serialize( stream ) )
+                return NEXT_ERROR;
+        }
+        break;
+
+        case NEXT_BACKEND_SERVER_RELAY_RESPONSE_PACKET:
+        {
+            NextBackendServerRelayResponsePacket * packet = (NextBackendServerRelayResponsePacket*) packet_object;
             if ( !packet->Serialize( stream ) )
                 return NEXT_ERROR;
         }

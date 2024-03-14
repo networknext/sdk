@@ -419,7 +419,7 @@ int next_platform_inet_ntop6( const uint16_t * address, char * address_string, s
 
 void next_platform_socket_destroy( next_platform_socket_t * );
 
-next_platform_socket_t * next_platform_socket_create( void * context, next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size, bool enable_packet_tagging )
+next_platform_socket_t * next_platform_socket_create( void * context, next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size )
 {
     next_assert( address );
     next_assert( address->type != NEXT_ADDRESS_NONE );
@@ -572,9 +572,18 @@ next_platform_socket_t * next_platform_socket_create( void * context, next_addre
         // timeout <= 0, socket is blocking with no timeout
     }
 
-    // IMPORTANT: Packet tagging must be manually enabled by the user on this platform. It applies only to the preferred multiplayer port.
-    // See https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/networking/overviews/game-mesh/preferred-local-udp-multiplayer-port-networking
-    (void)enable_packet_tagging;
+    // set don't fragment bit
+
+    if ( address->type == NEXT_ADDRESS_IPV6 )
+    {
+        int val = 1;
+        setsockopt( socket->handle, IPPROTO_IPV6, IPV6_DONTFRAG, &val, sizeof(val) );
+    }
+    else
+    {
+        int val = 1;
+        setsockopt( socket->handle, IPPROTO_IP, IP_DONTFRAG, &val, sizeof(val) );
+    }
 
     return s;
 }
@@ -736,6 +745,13 @@ int next_platform_id()
     #else
     return NEXT_PLATFORM_WINDOWS;
     #endif
+}
+
+bool next_platform_packet_tagging_can_be_enabled()
+{
+    // IMPORTANT: GDK lets the player enable dscp and wmm tagging via the UI. It is not under application control.
+    // See https://learn.microsoft.com/en-us/gaming/gdk/_content/gc/networking/overviews/qos-packet-tagging
+    return false;
 }
 
 #else // #ifdef _GAMING_XBOX

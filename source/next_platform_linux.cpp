@@ -188,10 +188,10 @@ void next_platform_sleep( double time )
 
 void next_platform_socket_destroy( next_platform_socket_t * socket );
 
-next_platform_socket_t * next_platform_socket_create( void * context, next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size, bool enable_packet_tagging )
-{
-    (void) enable_packet_tagging;
+extern bool next_packet_tagging_enabled;
 
+next_platform_socket_t * next_platform_socket_create( void * context, next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size )
+{
     next_assert( address );
     next_assert( address->type != NEXT_ADDRESS_NONE );
 
@@ -341,6 +341,41 @@ next_platform_socket_t * next_platform_socket_create( void * context, next_addre
     else
     {
         // blocking with no timeout
+    }
+
+    // set don't fragment bit
+
+    if ( address->type == NEXT_ADDRESS_IPV6 )
+    {
+        int val = IPV6_PMTUDISC_DO;
+        setsockopt( socket->handle, IPPROTO_IPV6, IPV6_MTU_DISCOVER, &val, sizeof(val) );
+    }
+    else
+    {
+        int val = IP_PMTUDISC_DO;
+        setsockopt( socket->handle, IPPROTO_IP, IP_MTU_DISCOVER, &val, sizeof(val) );
+    }
+
+    // tag packet as low latency
+
+    if ( next_packet_tagging_enabled )
+    {
+        if ( address->type == NEXT_ADDRESS_IPV6 )
+        {
+            int tos = 46;
+            if ( setsockopt( socket->handle, IPPROTO_IPV6, IPV6_TCLASS, (const char *)&tos, sizeof(tos) ) != 0 )
+            {
+                next_printf( NEXT_LOG_LEVEL_DEBUG, "failed to enable dscp packet tagging (ipv6)" );
+            }
+        }
+        else
+        {
+            int tos = 46;
+            if ( setsockopt( socket->handle, IPPROTO_IP, IP_TOS, (const char *)&tos, sizeof(tos) ) != 0 )
+            {
+                next_printf( NEXT_LOG_LEVEL_DEBUG, "failed to enable dscp packet tagging (ipv4)" );
+            }
+        }
     }
 
     return socket;
@@ -1054,6 +1089,13 @@ static int get_connection_type()
     address.data.ipv4[3] = 8;
 
     return classify_connection_type( &route_table, &interface_list, &address );
+}
+
+// ---------------------------------------------------
+
+bool next_platform_packet_tagging_can_be_enabled()
+{
+    return true;
 }
 
 // ---------------------------------------------------

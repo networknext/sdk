@@ -54,7 +54,6 @@ struct next_session_entry_t
     bool stats_fallback_to_direct;
     bool stats_client_bandwidth_over_limit;
     bool stats_server_bandwidth_over_limit;
-    bool stats_has_near_relay_pings;
     int stats_platform_id;
     int stats_connection_type;
     float stats_direct_kbps_up;
@@ -69,25 +68,20 @@ struct next_session_entry_t
     float stats_next_rtt;
     float stats_next_jitter;
     float stats_next_packet_loss;
-    int stats_num_near_relays;
 
     NEXT_DECLARE_SENTINEL(2)
 
-    uint64_t stats_near_relay_ids[NEXT_MAX_NEAR_RELAYS];
+    bool stats_has_client_relay_pings;
+    bool stats_client_relay_pings_have_changed;
+    uint64_t stats_last_client_relay_request_id;
+    uint64_t stats_last_server_relay_request_id;
+    int stats_num_client_relays;
+    uint64_t stats_client_relay_ids[NEXT_MAX_CLIENT_RELAYS];
+    uint8_t stats_client_relay_rtt[NEXT_MAX_CLIENT_RELAYS];
+    uint8_t stats_client_relay_jitter[NEXT_MAX_CLIENT_RELAYS];
+    float stats_client_relay_packet_loss[NEXT_MAX_CLIENT_RELAYS];
 
     NEXT_DECLARE_SENTINEL(3)
-
-    uint8_t stats_near_relay_rtt[NEXT_MAX_NEAR_RELAYS];
-
-    NEXT_DECLARE_SENTINEL(4)
-
-    uint8_t stats_near_relay_jitter[NEXT_MAX_NEAR_RELAYS];
-
-    NEXT_DECLARE_SENTINEL(5)
-
-    float stats_near_relay_packet_loss[NEXT_MAX_NEAR_RELAYS];
-
-    NEXT_DECLARE_SENTINEL(6)
 
     uint64_t stats_packets_sent_client_to_server;
     uint64_t stats_packets_sent_server_to_client;
@@ -105,6 +99,8 @@ struct next_session_entry_t
     double last_client_stats_update;
     double last_upgraded_packet_receive_time;
 
+    NEXT_DECLARE_SENTINEL(4)
+
     uint64_t update_sequence;
     bool update_dirty;
     bool waiting_for_update_response;
@@ -114,36 +110,15 @@ struct next_session_entry_t
     int update_num_tokens;
     bool session_update_timed_out;
 
-    NEXT_DECLARE_SENTINEL(7)
+    NEXT_DECLARE_SENTINEL(5)
 
     uint8_t update_tokens[NEXT_MAX_TOKENS*NEXT_ENCRYPTED_ROUTE_TOKEN_BYTES];
 
-    NEXT_DECLARE_SENTINEL(8)
-
-    bool update_has_near_relays;
-    int update_num_near_relays;
-
-    NEXT_DECLARE_SENTINEL(9)
-
-    uint64_t update_near_relay_ids[NEXT_MAX_NEAR_RELAYS];
-
-    NEXT_DECLARE_SENTINEL(10)
-
-    next_address_t update_near_relay_addresses[NEXT_MAX_NEAR_RELAYS];
-
-    NEXT_DECLARE_SENTINEL(11)
-
-    uint8_t update_near_relay_ping_tokens[NEXT_MAX_NEAR_RELAYS*NEXT_PING_TOKEN_BYTES];
-
-    NEXT_DECLARE_SENTINEL(12)
-
-    uint64_t update_near_relay_expire_timestamp;
-
-    NEXT_DECLARE_SENTINEL(13)
+    NEXT_DECLARE_SENTINEL(6)
 
     NextBackendSessionUpdateRequestPacket session_update_request_packet;
 
-    NEXT_DECLARE_SENTINEL(14)
+    NEXT_DECLARE_SENTINEL(7)
 
     bool has_pending_route;
     uint8_t pending_route_session_version;
@@ -153,11 +128,11 @@ struct next_session_entry_t
     int pending_route_kbps_down;
     next_address_t pending_route_send_address;
 
-    NEXT_DECLARE_SENTINEL(15)
+    NEXT_DECLARE_SENTINEL(8)
 
     uint8_t pending_route_private_key[NEXT_CRYPTO_BOX_SECRETKEYBYTES];
 
-    NEXT_DECLARE_SENTINEL(16)
+    NEXT_DECLARE_SENTINEL(9)
 
     bool has_current_route;
     uint8_t current_route_session_version;
@@ -167,43 +142,43 @@ struct next_session_entry_t
     int current_route_kbps_down;
     next_address_t current_route_send_address;
 
-    NEXT_DECLARE_SENTINEL(17)
+    NEXT_DECLARE_SENTINEL(10)
 
     uint8_t current_route_private_key[NEXT_CRYPTO_BOX_SECRETKEYBYTES];
 
-    NEXT_DECLARE_SENTINEL(18)
+    NEXT_DECLARE_SENTINEL(11)
 
     bool has_previous_route;
     next_address_t previous_route_send_address;
 
-    NEXT_DECLARE_SENTINEL(19)
+    NEXT_DECLARE_SENTINEL(12)
 
     uint8_t previous_route_private_key[NEXT_CRYPTO_BOX_SECRETKEYBYTES];
 
-    NEXT_DECLARE_SENTINEL(20)
+    NEXT_DECLARE_SENTINEL(13)
 
     uint8_t ephemeral_private_key[NEXT_CRYPTO_SECRETBOX_KEYBYTES];
     uint8_t send_key[NEXT_CRYPTO_KX_SESSIONKEYBYTES];
     uint8_t receive_key[NEXT_CRYPTO_KX_SESSIONKEYBYTES];
     uint8_t client_route_public_key[NEXT_CRYPTO_BOX_PUBLICKEYBYTES];
 
-    NEXT_DECLARE_SENTINEL(21)
+    NEXT_DECLARE_SENTINEL(14)
 
     uint8_t upgrade_token[NEXT_UPGRADE_TOKEN_BYTES];
 
-    NEXT_DECLARE_SENTINEL(22)
+    NEXT_DECLARE_SENTINEL(15)
 
     next_replay_protection_t payload_replay_protection;
     next_replay_protection_t special_replay_protection;
     next_replay_protection_t internal_replay_protection;
 
-    NEXT_DECLARE_SENTINEL(23)
+    NEXT_DECLARE_SENTINEL(16)
 
     next_packet_loss_tracker_t packet_loss_tracker;
     next_out_of_order_tracker_t out_of_order_tracker;
     next_jitter_tracker_t jitter_tracker;
 
-    NEXT_DECLARE_SENTINEL(24)
+    NEXT_DECLARE_SENTINEL(17)
 
     bool mutex_multipath;
     int mutex_envelope_kbps_up;
@@ -214,37 +189,45 @@ struct next_session_entry_t
     bool mutex_send_over_network_next;
     next_address_t mutex_send_address;
 
-    NEXT_DECLARE_SENTINEL(25)
+    NEXT_DECLARE_SENTINEL(18)
 
     uint8_t mutex_private_key[NEXT_CRYPTO_BOX_SECRETKEYBYTES];
 
-    NEXT_DECLARE_SENTINEL(26)
+    NEXT_DECLARE_SENTINEL(19)
 
     int session_data_bytes;
     uint8_t session_data[NEXT_MAX_SESSION_DATA_BYTES];
     uint8_t session_data_signature[NEXT_CRYPTO_SIGN_BYTES];
 
-    NEXT_DECLARE_SENTINEL(27)
+    NEXT_DECLARE_SENTINEL(20)
 
     bool client_ping_timed_out;
     double last_client_direct_ping;
     double last_client_next_ping;
 
-    NEXT_DECLARE_SENTINEL(28)
+    NEXT_DECLARE_SENTINEL(21)
 
     uint32_t session_flush_update_sequence;
     bool session_update_flush;
     bool session_update_flush_finished;
 
-    NEXT_DECLARE_SENTINEL(29)
+    NEXT_DECLARE_SENTINEL(22)
 
-    int num_held_near_relays;
-    uint64_t held_near_relay_ids[NEXT_MAX_NEAR_RELAYS];
-    uint8_t held_near_relay_rtt[NEXT_MAX_NEAR_RELAYS];
-    uint8_t held_near_relay_jitter[NEXT_MAX_NEAR_RELAYS];
-    float held_near_relay_packet_loss[NEXT_MAX_NEAR_RELAYS];
+    bool requesting_client_relays;
+    double next_client_relay_request_time;
+    double next_client_relay_request_packet_send_time;
+    double client_relay_request_timeout_time;
+    NextBackendClientRelayRequestPacket client_relay_request_packet;
+    NextBackendClientRelayResponsePacket client_relay_response_packet;
 
-    NEXT_DECLARE_SENTINEL(30)
+    NEXT_DECLARE_SENTINEL(23)
+
+    bool sending_client_relay_update_down_to_client;
+    double next_client_relay_update_packet_send_time;
+    double client_relay_update_timeout_time;
+    NextClientRelayUpdatePacket client_relay_update_packet;
+
+    NEXT_DECLARE_SENTINEL(24)
 };
 
 inline void next_session_entry_initialize_sentinels( next_session_entry_t * entry )
@@ -276,12 +259,6 @@ inline void next_session_entry_initialize_sentinels( next_session_entry_t * entr
     NEXT_INITIALIZE_SENTINEL( entry, 22 )
     NEXT_INITIALIZE_SENTINEL( entry, 23 )
     NEXT_INITIALIZE_SENTINEL( entry, 24 )
-    NEXT_INITIALIZE_SENTINEL( entry, 25 )
-    NEXT_INITIALIZE_SENTINEL( entry, 26 )
-    NEXT_INITIALIZE_SENTINEL( entry, 27 )
-    NEXT_INITIALIZE_SENTINEL( entry, 28 )
-    NEXT_INITIALIZE_SENTINEL( entry, 29 )
-    NEXT_INITIALIZE_SENTINEL( entry, 30 )
     next_replay_protection_initialize_sentinels( &entry->payload_replay_protection );
     next_replay_protection_initialize_sentinels( &entry->special_replay_protection );
     next_replay_protection_initialize_sentinels( &entry->internal_replay_protection );
@@ -319,12 +296,6 @@ inline void next_session_entry_verify_sentinels( next_session_entry_t * entry )
     NEXT_VERIFY_SENTINEL( entry, 22 )
     NEXT_VERIFY_SENTINEL( entry, 23 )
     NEXT_VERIFY_SENTINEL( entry, 24 )
-    NEXT_VERIFY_SENTINEL( entry, 25 )
-    NEXT_VERIFY_SENTINEL( entry, 26 )
-    NEXT_VERIFY_SENTINEL( entry, 27 )
-    NEXT_VERIFY_SENTINEL( entry, 28 )
-    NEXT_VERIFY_SENTINEL( entry, 29 )
-    NEXT_VERIFY_SENTINEL( entry, 30 )
     next_replay_protection_verify_sentinels( &entry->payload_replay_protection );
     next_replay_protection_verify_sentinels( &entry->special_replay_protection );
     next_replay_protection_verify_sentinels( &entry->internal_replay_protection );

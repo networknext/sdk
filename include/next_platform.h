@@ -76,7 +76,7 @@ NEXT_EXPORT_FUNC bool next_platform_client_dual_stack();
 
 // ----------------------------------------------------------------
 
-NEXT_EXPORT_FUNC struct next_platform_socket_t * next_platform_socket_create( void * context, struct next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size, bool enable_packet_tagging );
+NEXT_EXPORT_FUNC struct next_platform_socket_t * next_platform_socket_create( void * context, struct next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size );
 
 NEXT_EXPORT_FUNC void next_platform_socket_destroy( struct next_platform_socket_t * socket );
 
@@ -154,6 +154,10 @@ inline next_platform_mutex_helper_t::~next_platform_mutex_helper_t()
 }
 
 #endif // __cplusplus
+
+// ----------------------------------------------------------------
+
+bool next_platform_packet_tagging_can_be_enabled();
 
 // ----------------------------------------------------------------
 

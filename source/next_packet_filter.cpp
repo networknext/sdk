@@ -149,8 +149,9 @@ bool next_basic_packet_filter( const uint8_t * data, uint16_t packet_length )
 
 void next_address_data( const next_address_t * address, uint8_t * address_data )
 {
+    // IMPORTANT: Only IPv4 addresses are supported for the packet filter right now.
+    // The socket code automatically converts IPv4 as IPv6 addresses to IPv4 before passing in for dual stack
     next_assert( address );
-    next_assert( address->type == NEXT_ADDRESS_IPV4 );  // IMPORTANT: Only IPv4 is supported
     address_data[0] = address->data.ipv4[0];
     address_data[1] = address->data.ipv4[1];
     address_data[2] = address->data.ipv4[2];

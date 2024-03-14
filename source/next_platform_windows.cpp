@@ -341,7 +341,9 @@ int next_set_socket_codepoint( SOCKET socket, QOS_TRAFFIC_TYPE trafficType, QOS_
     return 0;
 }
 
-next_platform_socket_t * next_platform_socket_create( void * context, next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size, bool enable_packet_tagging )
+extern bool next_packet_tagging_enabled;
+
+next_platform_socket_t * next_platform_socket_create( void * context, next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size )
 {
     next_platform_socket_t * s = (next_platform_socket_t *) next_malloc( context, sizeof( next_platform_socket_t ) );
 
@@ -499,9 +501,22 @@ next_platform_socket_t * next_platform_socket_create( void * context, next_addre
         // timeout < 0, socket is blocking with no timeout
     }
 
+    // set don't fragment bit
+
+    if ( address->type == NEXT_ADDRESS_IPV6 )
+    {
+        int val = 1;
+        setsockopt( socket->handle, IPPROTO_IPV6, IPV6_DONTFRAG, &val, sizeof(val) );
+    }
+    else
+    {
+        int val = 1;
+        setsockopt( socket->handle, IPPROTO_IP, IP_DONTFRAG, &val, sizeof(val) );
+    }    
+
     // tag as latency sensitive
 
-    if ( enable_packet_tagging )
+    if ( next_packet_tagging_enabled )
     {
         next_set_socket_codepoint( s->handle, QOSTrafficTypeAudioVideo, 0, addr );
     }
@@ -708,6 +723,11 @@ static int get_connection_type()
     }
 
     return result;
+}
+
+bool next_platform_packet_tagging_can_be_enabled()
+{
+    return true;
 }
 
 #if NEXT_UNREAL_ENGINE

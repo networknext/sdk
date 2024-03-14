@@ -504,6 +504,14 @@ NEXT_EXPORT_FUNC bool next_server_direct_only( struct next_server_t * server );
 
 // -----------------------------------------
 
+NEXT_EXPORT_FUNC bool next_packet_tagging_can_be_enabled();
+
+NEXT_EXPORT_FUNC void next_enable_packet_tagging();
+
+NEXT_EXPORT_FUNC void next_disable_packet_tagging();
+
+// -----------------------------------------
+
 NEXT_EXPORT_FUNC void next_copy_string( char * dest, const char * source, size_t dest_size );
 
 // -----------------------------------------

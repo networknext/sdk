@@ -403,7 +403,7 @@ int next_platform_socket_init( next_platform_socket_t * s, next_address_t * addr
     return NEXT_OK;
 }
 
-next_platform_socket_t * next_platform_socket_create( void * context, next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size, bool enable_packet_tagging )
+next_platform_socket_t * next_platform_socket_create( void * context, next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size )
 {
     next_assert( address );
 

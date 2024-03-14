@@ -135,7 +135,7 @@ inline void next_route_stats_from_ping_history( const next_ping_history_t * hist
 
     stats->rtt = 0.0f;
     stats->jitter = 0.0f;
-    stats->packet_loss = 0.0f;
+    stats->packet_loss = 100.0f;
 
     // IMPORTANT: Instead of searching across the whole range then considering any ping with a pong older than ping safety
     // (typically one second) to be lost, look for the time of the most recent ping that has received a pong, subtract ping

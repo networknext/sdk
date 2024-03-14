@@ -347,6 +347,8 @@ int next_init( void * context, next_config_t * config_in )
         return NEXT_ERROR;
     }
 
+    next_printf( NEXT_LOG_LEVEL_INFO, "network next version is %s", NEXT_VERSION_FULL );
+
     const char * platform_string = next_platform_string( next_platform_id() );
     const char * connection_string = next_connection_string( next_platform_connection_type() );
 
@@ -559,12 +561,18 @@ int next_init( void * context, next_config_t * config_in )
     next_signed_packets[NEXT_BACKEND_SERVER_UPDATE_RESPONSE_PACKET] = 1;
     next_signed_packets[NEXT_BACKEND_SESSION_UPDATE_REQUEST_PACKET] = 1;
     next_signed_packets[NEXT_BACKEND_SESSION_UPDATE_RESPONSE_PACKET] = 1;
+    next_signed_packets[NEXT_BACKEND_CLIENT_RELAY_REQUEST_PACKET] = 1;
+    next_signed_packets[NEXT_BACKEND_CLIENT_RELAY_RESPONSE_PACKET] = 1;
+    next_signed_packets[NEXT_BACKEND_SERVER_RELAY_REQUEST_PACKET] = 1;
+    next_signed_packets[NEXT_BACKEND_SERVER_RELAY_RESPONSE_PACKET] = 1;
 
     next_encrypted_packets[NEXT_DIRECT_PING_PACKET] = 1;
     next_encrypted_packets[NEXT_DIRECT_PONG_PACKET] = 1;
     next_encrypted_packets[NEXT_CLIENT_STATS_PACKET] = 1;
     next_encrypted_packets[NEXT_ROUTE_UPDATE_PACKET] = 1;
-    next_encrypted_packets[NEXT_ROUTE_UPDATE_ACK_PACKET] = 1;
+    next_encrypted_packets[NEXT_ROUTE_ACK_PACKET] = 1;
+    next_encrypted_packets[NEXT_CLIENT_RELAY_UPDATE_PACKET] = 1;
+    next_encrypted_packets[NEXT_CLIENT_RELAY_ACK_PACKET] = 1;
 
     return NEXT_OK;
 }
@@ -579,6 +587,34 @@ void next_term()
 #if NEXT_DEVELOPMENT
 bool next_packet_loss;
 #endif // #if NEXT_DEVELOPMENT
+
+// ---------------------------------------------------------------
+
+// IMPORTANT: off by default.
+bool next_packet_tagging_enabled = false;
+
+bool next_packet_tagging_can_be_enabled()
+{
+    return next_platform_packet_tagging_can_be_enabled();
+}
+
+void next_enable_packet_tagging()
+{
+    if ( next_platform_packet_tagging_can_be_enabled() )
+    {
+        next_printf( NEXT_LOG_LEVEL_INFO, "enabled packet tagging" );
+        next_packet_tagging_enabled = true;
+    }
+}
+
+void next_disable_packet_tagging()
+{
+    if ( next_platform_packet_tagging_can_be_enabled() )
+    {
+        next_printf( NEXT_LOG_LEVEL_INFO, "disabled packet tagging" );
+        next_packet_tagging_enabled = false;
+    }
+}
 
 // ---------------------------------------------------------------
 

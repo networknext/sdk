@@ -27,6 +27,8 @@
 #include "next_platform.h"
 #include "next_address.h"
 
+#define __APPLE_USE_RFC_3542
+
 #include <netdb.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -224,10 +226,10 @@ void next_platform_sleep( double time )
 
 void next_platform_socket_destroy( next_platform_socket_t * socket );
 
-next_platform_socket_t * next_platform_socket_create( void * context, next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size, bool enable_packet_tagging )
-{
-    (void) enable_packet_tagging;
+extern bool next_packet_tagging_enabled;
 
+next_platform_socket_t * next_platform_socket_create( void * context, next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size )
+{
     next_assert( address );
     next_assert( address->type != NEXT_ADDRESS_NONE );
 
@@ -377,29 +379,38 @@ next_platform_socket_t * next_platform_socket_create( void * context, next_addre
         // blocking with no timeout
     }
 
-    // tag packet as low latency. this helps to reduce jitter on wifi
+    // set don't fragment bit
 
-    if ( enable_packet_tagging )
+    if ( address->type == NEXT_ADDRESS_IPV6 )
+    {
+        int val = 1;
+        setsockopt( socket->handle, IPPROTO_IPV6, IPV6_DONTFRAG, &val, sizeof(val) );
+    }
+    else
+    {
+        int val = 1;
+        setsockopt( socket->handle, IPPROTO_IP, IP_DONTFRAG, &val, sizeof(val) );
+    }
+
+    // tag packet as low latency
+
+    if ( next_packet_tagging_enabled )
     {
         if ( address->type == NEXT_ADDRESS_IPV6 )
         {
-            #if defined(IPV6_TCLASS)
-            int tos = 0xA0;
+            int tos = 46;
             if ( setsockopt( socket->handle, IPPROTO_IPV6, IPV6_TCLASS, (const char *)&tos, sizeof(tos) ) != 0 )
             {
-                next_printf( NEXT_LOG_LEVEL_DEBUG, "failed to set socket tos (ipv6)" );
+                next_printf( NEXT_LOG_LEVEL_DEBUG, "failed to enable dscp packet tagging (ipv6)" );
             }
-            #endif
         }
         else
         {
-            #if defined(IP_TOS)
-            int tos = 0xA0;
+            int tos = 46;
             if ( setsockopt( socket->handle, IPPROTO_IP, IP_TOS, (const char *)&tos, sizeof(tos) ) != 0 )
             {
-                next_printf( NEXT_LOG_LEVEL_DEBUG, "failed to set socket tos (ipv4)" );
+                next_printf( NEXT_LOG_LEVEL_DEBUG, "failed to enable dscp packet tagging (ipv4)" );
             }
-            #endif
         }
     }
 
@@ -666,6 +677,13 @@ void next_platform_mutex_destroy( next_platform_mutex_t * mutex )
         pthread_mutex_destroy( &mutex->handle );
         memset( mutex, 0, sizeof(next_platform_mutex_t) );
     }
+}
+
+// ---------------------------------------------------
+
+bool next_platform_packet_tagging_can_be_enabled()
+{
+    return true;
 }
 
 // ---------------------------------------------------
