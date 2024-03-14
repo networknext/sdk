@@ -376,7 +376,7 @@ inline next_session_manager_t * next_session_manager_create( void * context, int
 
     memset( session_manager->session_ids, 0, size_t(initial_size) * 8 );
     memset( session_manager->addresses, 0, size_t(initial_size) * sizeof(next_address_t) );
-    memset( session_manager->entries, 0, size_t(initial_size) * sizeof(next_session_entry_t) );
+    memset( (char*) session_manager->entries, 0, size_t(initial_size) * sizeof(next_session_entry_t) );
 
     next_session_manager_verify_sentinels( session_manager );
 
