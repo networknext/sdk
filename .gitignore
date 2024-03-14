@@ -1,0 +1,11 @@
+.DS_Store
+bin
+obj
+.vscode
+*.o
+*.d
+*.a
+Gaming.Xbox.*
+debug
+release
+int
