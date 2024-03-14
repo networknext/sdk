@@ -304,6 +304,8 @@ int next_platform_inet_ntop6( const uint16_t * address, char * address_string, s
 
 void next_platform_socket_destroy( next_platform_socket_t * socket );
 
+extern bool next_packet_tagging_enabled;
+
 int next_platform_socket_init( next_platform_socket_t * s, next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size )
 {
     // create socket
@@ -399,6 +401,19 @@ int next_platform_socket_init( next_platform_socket_t * s, next_address_t * addr
     {
         // timeout < 0, socket is blocking with no timeout
     }
+
+	// set do not fragment
+
+	int value = 1;
+	nn::socket::SetSockOpt( s->handle, nn::socket::Level::Sol_Ip, nn::socket::Option::Ip_DontFrag, (void*)( &value ), nn::socket::SockLenT( sizeof( int ) ) );
+
+	// enable dscp packet tagging
+
+	if ( next_packet_tagging_enabled )
+	{
+		int value = 46;
+		nn::socket::SetSockOpt( s->handle, nn::socket::Level::Sol_Ip, nn::socket::Option::Ip_Tos, (void*)( &value ), nn::socket::SockLenT( sizeof( int ) ) );
+	}
 
     return NEXT_OK;
 }
@@ -543,6 +558,11 @@ int next_platform_socket_receive_packet( next_platform_socket_t * socket, next_a
 int next_platform_id()
 {
     return NEXT_PLATFORM_SWITCH;
+}
+
+bool next_platform_packet_tagging_can_be_enabled()
+{
+	return true;
 }
 
 #else // #if NEXT_PLATFORM == NEXT_PLATFORM_SWITCH

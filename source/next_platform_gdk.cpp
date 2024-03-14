@@ -577,12 +577,12 @@ next_platform_socket_t * next_platform_socket_create( void * context, next_addre
     if ( address->type == NEXT_ADDRESS_IPV6 )
     {
         int val = 1;
-        setsockopt( socket->handle, IPPROTO_IPV6, IPV6_DONTFRAG, &val, sizeof(val) );
+        setsockopt( s->handle, IPPROTO_IPV6, IPV6_DONTFRAG, (const char*) &val, sizeof(val) );
     }
     else
     {
         int val = 1;
-        setsockopt( socket->handle, IPPROTO_IP, IP_DONTFRAG, &val, sizeof(val) );
+        setsockopt( s->handle, IPPROTO_IP, IP_DONTFRAGMENT, (const char*) &val, sizeof(val) );
     }
 
     return s;

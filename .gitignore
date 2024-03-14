@@ -9,3 +9,9 @@ Gaming.Xbox.*
 debug
 release
 int
+.vs
+*.vcxproj.*
+*.tlog
+sce_module
+*.elf
+*.log

@@ -31,19 +31,16 @@ size_t crypto_hash_sha256_statebytes(void);
 size_t crypto_hash_sha256_bytes(void);
 
 int crypto_hash_sha256(unsigned char *out, const unsigned char *in,
-                       unsigned long long inlen) __attribute__ ((nonnull(1)));
+                       unsigned long long inlen);
 
-int crypto_hash_sha256_init(crypto_hash_sha256_state *state)
-            __attribute__ ((nonnull));
+int crypto_hash_sha256_init(crypto_hash_sha256_state *state);
 
 int crypto_hash_sha256_update(crypto_hash_sha256_state *state,
                               const unsigned char *in,
-                              unsigned long long inlen)
-            __attribute__ ((nonnull(1)));
+                              unsigned long long inlen);
 
 int crypto_hash_sha256_final(crypto_hash_sha256_state *state,
-                             unsigned char *out)
-            __attribute__ ((nonnull));
+                             unsigned char *out);
 
 #ifdef __cplusplus
 }

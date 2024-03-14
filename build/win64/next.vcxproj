@@ -149,6 +149,7 @@
     <ClInclude Include="..\..\sodium\sodium_blake2b-load-sse2.h" />
     <ClInclude Include="..\..\sodium\sodium_blake2b-load-sse41.h" />
     <ClInclude Include="..\..\sodium\sodium_chacha20-ref.h" />
+    <ClInclude Include="..\..\sodium\sodium_common.h" />
     <ClInclude Include="..\..\sodium\sodium_core.h" />
     <ClInclude Include="..\..\sodium\sodium_crypto_aead_chacha20poly1305.h" />
     <ClInclude Include="..\..\sodium\sodium_crypto_aead_xchacha20poly1305.h" />
@@ -167,6 +168,7 @@
     <ClInclude Include="..\..\sodium\sodium_crypto_generichash.h" />
     <ClInclude Include="..\..\sodium\sodium_crypto_generichash_blake2b.h" />
     <ClInclude Include="..\..\sodium\sodium_crypto_hash.h" />
+    <ClInclude Include="..\..\sodium\sodium_crypto_hash_sha256.h" />
     <ClInclude Include="..\..\sodium\sodium_crypto_hash_sha512.h" />
     <ClInclude Include="..\..\sodium\sodium_crypto_kx.h" />
     <ClInclude Include="..\..\sodium\sodium_crypto_onetimeauth.h" />
@@ -274,6 +276,8 @@
     <ClCompile Include="..\..\sodium\sodium_crypto_box.c" />
     <ClCompile Include="..\..\sodium\sodium_crypto_box_easy.c" />
     <ClCompile Include="..\..\sodium\sodium_crypto_generichash.c" />
+    <ClCompile Include="..\..\sodium\sodium_crypto_hash_sha256.c" />
+    <ClCompile Include="..\..\sodium\sodium_crypto_hash_sha256_cp.c" />
     <ClCompile Include="..\..\sodium\sodium_crypto_kx.c" />
     <ClCompile Include="..\..\sodium\sodium_crypto_scalarmult.c" />
     <ClCompile Include="..\..\sodium\sodium_crypto_secretbox.c" />

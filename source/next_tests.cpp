@@ -3286,7 +3286,7 @@ void test_client_relay_update_packet()
 {
     uint8_t packet_data[NEXT_MAX_PACKET_BYTES];
     uint64_t iterations = 100;
-    for ( uint64_t i = 0; i < iterations; ++i )
+    for ( uint64_t j = 0; j < iterations; ++j )
     {
         uint8_t private_key[NEXT_SESSION_PRIVATE_KEY_BYTES];
         next_crypto_random_bytes( private_key, sizeof(private_key) );
@@ -4087,7 +4087,7 @@ void test_client_relay_response_packet()
 {
     uint8_t packet_data[NEXT_MAX_PACKET_BYTES];
     uint64_t iterations = 100;
-    for ( uint64_t i = 0; i < iterations; ++i )
+    for ( uint64_t j = 0; j < iterations; ++j )
     {
         unsigned char public_key[NEXT_CRYPTO_SIGN_PUBLICKEYBYTES];
         unsigned char private_key[NEXT_CRYPTO_SIGN_SECRETKEYBYTES];
@@ -4192,7 +4192,7 @@ void test_server_relay_response_packet()
 {
     uint8_t packet_data[NEXT_MAX_PACKET_BYTES];
     uint64_t iterations = 100;
-    for ( uint64_t i = 0; i < iterations; ++i )
+    for ( uint64_t j = 0; j < iterations; ++j )
     {
         unsigned char public_key[NEXT_CRYPTO_SIGN_PUBLICKEYBYTES];
         unsigned char private_key[NEXT_CRYPTO_SIGN_SECRETKEYBYTES];
@@ -4242,22 +4242,7 @@ void test_server_relay_response_packet()
     }
 }
 
-#if NEXT_PLATFORM_CAN_RUN_SERVER
-
 static uint64_t test_passthrough_packets_client_packets_received;
-static uint64_t test_passthrough_packets_server_packets_received;
-
-void test_passthrough_packets_server_packet_received_callback( next_server_t * server, void * context, const next_address_t * from, const uint8_t * packet_data, int packet_bytes )
-{
-    (void) context;
-    next_server_send_packet( server, from, packet_data, packet_bytes );
-    for ( int i = 0; i < packet_bytes; i++ )
-    {
-        if ( packet_data[i] != uint8_t( packet_bytes + i ) )
-            return;
-    }
-    test_passthrough_packets_server_packets_received++;
-}
 
 void test_passthrough_packets_client_packet_received_callback( next_client_t * client, void * context, const next_address_t * from, const uint8_t * packet_data, int packet_bytes )
 {
@@ -4270,6 +4255,22 @@ void test_passthrough_packets_client_packet_received_callback( next_client_t * c
             return;
     }
     test_passthrough_packets_client_packets_received++;
+}
+
+#if NEXT_PLATFORM_CAN_RUN_SERVER
+
+static uint64_t test_passthrough_packets_server_packets_received;
+
+void test_passthrough_packets_server_packet_received_callback( next_server_t * server, void * context, const next_address_t * from, const uint8_t * packet_data, int packet_bytes )
+{
+    (void) context;
+    next_server_send_packet( server, from, packet_data, packet_bytes );
+    for ( int i = 0; i < packet_bytes; i++ )
+    {
+        if ( packet_data[i] != uint8_t( packet_bytes + i ) )
+            return;
+    }
+    test_passthrough_packets_server_packets_received++;
 }
 
 void test_passthrough_packets()
@@ -4319,25 +4320,25 @@ void test_passthrough_packets()
     next_server_destroy( server );
 }
 
+#endif // #if NEXT_PLATFORM_CAN_RUN_SERVER
+
 void test_packet_tagging()
 {
     if ( next_packet_tagging_can_be_enabled() )
     {
         next_enable_packet_tagging();
 
+#if NEXT_PLATFORM_CAN_RUN_SERVER
         next_server_t * server = next_server_create( NULL, "127.0.0.1", "0.0.0.0:12345", "local", test_passthrough_packets_server_packet_received_callback );
-
         next_check( server );
+#endif // #if NEXT_PLATFORM_CAN_RUN_SERVER
 
         next_client_t * client = next_client_create( NULL, "0.0.0.0:0", test_passthrough_packets_client_packet_received_callback );
-
         next_check( client );
 
         next_disable_packet_tagging();
     }
 }
-
-#endif // #if NEXT_PLATFORM_CAN_RUN_SERVER
 
 #define RUN_TEST( test_function )                                           \
     do                                                                      \

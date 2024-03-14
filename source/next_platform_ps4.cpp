@@ -370,6 +370,8 @@ int next_platform_inet_ntop6( const uint16_t * address, char * address_string, s
 
 void next_platform_socket_destroy( next_platform_socket_t * socket );
 
+extern bool next_packet_tagging_enabled;
+
 next_platform_socket_t * next_platform_socket_create( void * context, next_address_t * address, int socket_type, float timeout_seconds, int send_buffer_size, int receive_buffer_size )
 {
     next_platform_socket_t * s = (next_platform_socket_t *) next_malloc( context, sizeof( next_platform_socket_t ) );
@@ -470,10 +472,20 @@ next_platform_socket_t * next_platform_socket_create( void * context, next_addre
         // timeout <= 0, socket is blocking with no timeout
     }
 
-    // IMPORTANT: packet tagging is not currently supported on ps4
-    (void) enable_packet_tagging;
+	// set don't fragment
 
-    return s;
+	int value = 1;
+	sceNetSetsockopt( s->handle, SCE_NET_IPPROTO_IP, SCE_NET_IP_DONTFRAG, &value, sizeof( value ) );
+
+	// enable dscp packet tagging
+
+	if ( next_packet_tagging_enabled )
+	{
+		int value = 46;
+		sceNetSetsockopt( s->handle, SCE_NET_IPPROTO_IP, SCE_NET_IP_TOS, &value, sizeof( value ) );
+	}
+
+	return s;
 }
 
 void next_platform_socket_destroy( next_platform_socket_t * socket )
@@ -569,6 +581,11 @@ int next_platform_socket_receive_packet( next_platform_socket_t * socket, next_a
 int next_platform_id()
 {
     return NEXT_PLATFORM_PS4;
+}
+
+bool next_platform_packet_tagging_can_be_enabled()
+{
+    return true;
 }
 
 #else // #if NEXT_PLATFORM == NEXT_PLATFORM_PS4
