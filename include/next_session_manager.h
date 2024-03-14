@@ -354,7 +354,7 @@ inline next_session_manager_t * next_session_manager_create( void * context, int
     if ( !session_manager )
         return NULL;
 
-    memset( session_manager, 0, sizeof(next_session_manager_t) );
+    memset( (char*) session_manager, 0, sizeof(next_session_manager_t) );
 
     next_session_manager_initialize_sentinels( session_manager );
 
@@ -374,8 +374,8 @@ inline next_session_manager_t * next_session_manager_create( void * context, int
         return NULL;
     }
 
-    memset( session_manager->session_ids, 0, size_t(initial_size) * 8 );
-    memset( session_manager->addresses, 0, size_t(initial_size) * sizeof(next_address_t) );
+    memset( (char*) session_manager->session_ids, 0, size_t(initial_size) * 8 );
+    memset( (char*) session_manager->addresses, 0, size_t(initial_size) * sizeof(next_address_t) );
     memset( (char*) session_manager->entries, 0, size_t(initial_size) * sizeof(next_session_entry_t) );
 
     next_session_manager_verify_sentinels( session_manager );
@@ -418,8 +418,8 @@ inline bool next_session_manager_expand( next_session_manager_t * session_manage
         return false;
     }
 
-    memset( new_session_ids, 0, size_t(new_size) * 8 );
-    memset( new_addresses, 0, size_t(new_size) * sizeof(next_address_t) );
+    memset( (char*) new_session_ids, 0, size_t(new_size) * 8 );
+    memset( (char*) new_addresses, 0, size_t(new_size) * sizeof(next_address_t) );
     memset( (char*) new_entries, 0, size_t(new_size) * sizeof(next_session_entry_t) );
 
     int index = 0;
@@ -450,7 +450,7 @@ inline bool next_session_manager_expand( next_session_manager_t * session_manage
 
 inline void next_clear_session_entry( next_session_entry_t * entry, const next_address_t * address, uint64_t session_id )
 {
-    memset( entry, 0, sizeof(next_session_entry_t) );
+    memset( (char*) entry, 0, sizeof(next_session_entry_t) );
 
     next_session_entry_initialize_sentinels( entry );
 
