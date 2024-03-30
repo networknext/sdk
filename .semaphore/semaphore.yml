@@ -2,6 +2,11 @@ version: v1.0
 
 name: Test
 
+agent:
+  machine:
+    type: e2-standard-2
+    os_image: ubuntu2204
+    
 blocks:
 
   - name: "Test on Ubuntu 22.04 LTS"
@@ -10,10 +15,6 @@ blocks:
       prologue:
         commands:
           - checkout
-      agent:
-        machine:
-          type: e2-standard-2
-          os_image: ubuntu2204
       jobs:
         - name: test
           matrix:
