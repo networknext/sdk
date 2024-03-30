@@ -1319,7 +1319,7 @@ void next_server_internal_update_client_relays( next_server_internal_t * server 
                 uint8_t from_address_data[4];
                 uint8_t to_address_data[4];
 
-                next_address_data( &entry->address, from_address_data );
+                next_address_data( &server->server_address, from_address_data );
                 next_address_data( &server->backend_address, to_address_data );
                 int packet_bytes = 0;
                 if ( next_write_backend_packet( NEXT_BACKEND_CLIENT_RELAY_REQUEST_PACKET, &entry->client_relay_request_packet, packet_data, &packet_bytes, next_signed_packets, server->buyer_private_key, magic, from_address_data, to_address_data ) != NEXT_OK )
@@ -2726,7 +2726,7 @@ void next_server_internal_process_network_next_packet( next_server_internal_t * 
             session->stats_next_packet_loss = packet.next_packet_loss;
             session->stats_has_client_relay_pings = packet.num_client_relays > 0;
 
-            if ( packet.client_relay_request_id != session->stats_last_client_relay_request_id )
+            if ( session->update_sequence != 0 && packet.client_relay_request_id != session->stats_last_client_relay_request_id )
             {
                 next_printf( NEXT_LOG_LEVEL_INFO, "server sees client relays have changed for session %" PRIx64, session->session_id );
                 session->stats_client_relay_pings_have_changed = true;
@@ -3768,8 +3768,11 @@ void next_server_internal_backend_update( next_server_internal_t * server )
             packet.direct_max_packet_loss_seen = session->stats_direct_max_packet_loss_seen;
 
             packet.has_client_relay_pings = session->stats_has_client_relay_pings;
-            packet.client_relay_pings_have_changed = session->stats_client_relay_pings_have_changed;
-            session->stats_client_relay_pings_have_changed = false;
+            packet.client_relay_pings_have_changed = packet.slice_number != 0 && session->stats_client_relay_pings_have_changed;
+            if ( packet.client_relay_pings_have_changed )
+            {
+                session->stats_client_relay_pings_have_changed = false;
+            }
             packet.num_client_relays = session->stats_num_client_relays;
             for ( int j = 0; j < packet.num_client_relays; ++j )
             {
@@ -3780,8 +3783,11 @@ void next_server_internal_backend_update( next_server_internal_t * server )
             }
 
             packet.has_server_relay_pings = server->stats_has_server_relay_pings;
-            packet.server_relay_pings_have_changed = server->stats_server_relay_request_id != session->stats_last_server_relay_request_id;
-            session->stats_last_server_relay_request_id = server->stats_server_relay_request_id;
+            packet.server_relay_pings_have_changed = packet.slice_number != 0 && server->stats_server_relay_request_id != session->stats_last_server_relay_request_id;
+            if ( packet.server_relay_pings_have_changed )
+            {
+                session->stats_last_server_relay_request_id = server->stats_server_relay_request_id;
+            }
             packet.num_server_relays = server->stats_num_server_relays;
             for ( int j = 0; j < packet.num_server_relays; ++j )
             {
